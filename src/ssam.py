@@ -14,13 +14,16 @@ def open_pdb_file(filename):
     """Reads the .pdb file and stores info"""
 
     assert filename.lower().endswith(".pdb"), "Program can only work with a .pdb file"
-    print("Reading file")
-    file_pdb = open(filename, "r")
-    file_pdb.close()
-    pdb_info = []
-    residues = []
-    print("ok")
-    return pdb_info, residues
+    try:
+        with open(filename, "r") as file_pdb:
+            list_of_lines = file_pdb.readlines()
+        file_pdb.close()
+        pdb_info = []
+        residues = []
+        print("ok")
+        return pdb_info, residues
+    except FileNotFoundError as fnf_error:
+        print(fnf_error)
 
 def main():
 
