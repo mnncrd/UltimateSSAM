@@ -106,6 +106,17 @@ class Residue():
         angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
         self.angles["PHI"] = "{:.1f}".format(angle)
 
+    def compute_psi(self, oth):
+
+        """Compute psi"""
+
+        v_i = self.atoms["N"].pos_vector()
+        v_j = self.atoms["CA"].pos_vector()
+        v_k = self.atoms["C"].pos_vector()
+        v_l = oth.atoms["N"].pos_vector()
+        angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
+        self.angles["PSI"] = "{:.1f}".format(angle)
+
 class Atom():
 
     """
