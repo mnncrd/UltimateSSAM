@@ -48,6 +48,12 @@ class Residue():
             "PHI":"360.0",
             "PSI":"360.0"
         }
+        self.struct = {
+            "H":False, "B":False, "E":False, "G":False, "I":False, "T":False, "S":False,
+            "3":" ", "4":" ", "5":" ",
+            "BEND":" ",
+            "CHR":" "
+        }
 
     def compute_tco(self, oth):
 
