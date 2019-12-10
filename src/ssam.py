@@ -103,6 +103,17 @@ def read_pdb_file(lines):
             molecule += line.strip()
         elif line[0:6] == 'AUTHOR':
             authors.append(line[10:].strip().split(","))
+        elif line[0:4] == 'ATOM':
+            atom = Atom(line)
+            if atom.aa_nb != res_nb:
+                if len(atoms) > 0:
+                    res = Residue(atoms)
+                    residues.append(res)
+                    atoms = []
+                res_nb = atom.aa_nb
+            atoms.append(atom)
+    res = Residue(atoms)
+    residues.append(res)
     authors = ','.join(sum(authors, []))
     pdb_info = (header_pdb, organism, molecule, authors)
     return pdb_info, residues
