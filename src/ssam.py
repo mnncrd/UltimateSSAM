@@ -120,6 +120,16 @@ class Atom():
         coords = [vect_x, vect_y, vect_z]
         return coords
 
+    def pos_vector(self):
+
+        """Returns the position vector of the atom"""
+
+        vect_x = self.x_coord
+        vect_y = self.y_coord
+        vect_z = self.z_coord
+        coords = [vect_x, vect_y, vect_z]
+        return coords
+
 def read_pdb_file(lines):
 
     """Stores info"""
