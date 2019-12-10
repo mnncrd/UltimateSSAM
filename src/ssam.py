@@ -183,6 +183,27 @@ class Atom():
         coords = [vect_x, vect_y, vect_z]
         return coords
 
+def find_angles(residues):
+
+    """Computes all angles"""
+
+    nb_res = len(residues)
+    indices = [residue.number for residue in residues]
+    for i in range(nb_res):
+        if residues[i].number-1 in indices:
+            residues[i].compute_tco(residues[i-1])
+            residues[i].compute_phi(residues[i-1])
+        if residues[i].number-2 in indices and residues[i].number+2 in indices:
+            residues[i].compute_kappa(residues[i-2], residues[i+2])
+        if (
+                residues[i].number-1 in indices and
+                residues[i].number+1 in indices and
+                residues[i].number+2 in indices
+        ):
+            residues[i].compute_alpha(residues[i-1], residues[i+1], residues[i+2])
+        if residues[i].number+1 in indices:
+            residues[i].compute_psi(residues[i+1])
+
 def read_pdb_file(lines):
 
     """Stores info"""
