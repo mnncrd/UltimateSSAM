@@ -26,11 +26,11 @@ class Residue():
     def __init__(self, atoms, res_nb=None):
 
         self.atoms = {
-                "CA":next((a for a in atoms if a.atom_name == "CA"), None),
-                "C":next((a for a in atoms if a.atom_name == "C"), None),
-                "H":next((a for a in atoms if a.atom_name == "H"), None),
-                "O":next((a for a in atoms if a.atom_name == "O"), None),
-                "N":next((a for a in atoms if a.atom_name == "N"), None)    
+            "CA":next((a for a in atoms if a.atom_name == "CA"), None),
+            "C":next((a for a in atoms if a.atom_name == "C"), None),
+            "H":next((a for a in atoms if a.atom_name == "H"), None),
+            "O":next((a for a in atoms if a.atom_name == "O"), None),
+            "N":next((a for a in atoms if a.atom_name == "N"), None)
         }
         if res_nb is None:
             self.number = self.atoms["CA"].aa_nb
