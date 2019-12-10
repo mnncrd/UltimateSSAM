@@ -47,6 +47,15 @@ class Residue():
             "PSI":"360.0"
         }
 
+    def compute_tco(self, oth):
+
+        """Computes the tco"""
+
+        v_i = self.atoms["C"].vector(self.atoms["O"])
+        v_j = oth.atoms["C"].vector(oth.atoms["O"])
+        angle = math.cos(angles.compute_angle(v_i, v_j))
+        self.angles["TCO"] = "{:.3f}".format(angle)
+
 class Atom():
 
     """
