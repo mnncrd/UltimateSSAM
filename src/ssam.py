@@ -270,5 +270,10 @@ def main():
         print(error)
         print(args.filename, " is not a .pdb file")
 
+    #Angles
+    print("Computing angles")
+    find_angles(residues)
+    print("ok")
+
 if __name__ == '__main__':
     main()
