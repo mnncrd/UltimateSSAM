@@ -10,6 +10,35 @@ This program assigns secondary structures to a sequence.
 import argparse
 import math
 
+class Residue():
+    """
+    Summary of class Residue.
+
+    Lorem ipsum.
+
+    Attributes:
+        atoms: A dictionary of Atoms instance forming the Residue.
+        number: A integer indicating the number of the Residue.
+        name:  A string indicating the name of the Residue.
+        chain: A string indicating on which chain is the Residue.
+    """
+
+    def __init__(self, atoms, res_nb=None):
+
+        self.atoms = {
+                "CA":next((a for a in atoms if a.atom_name == "CA"), None),
+                "C":next((a for a in atoms if a.atom_name == "C"), None),
+                "H":next((a for a in atoms if a.atom_name == "H"), None),
+                "O":next((a for a in atoms if a.atom_name == "O"), None),
+                "N":next((a for a in atoms if a.atom_name == "N"), None)    
+        }
+        if res_nb is None:
+            self.number = self.atoms["CA"].aa_nb
+        else:
+            self.number = res_nb
+        self.name = self.atoms["CA"].aa_name
+        self.chain = self.atoms["CA"].aa_chain
+
 class Atom():
 
     """
