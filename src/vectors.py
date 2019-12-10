@@ -20,6 +20,16 @@ def scal_product(v_i, v_j):
     scal_prod = v_i[0]*v_j[0] + v_i[1]*v_j[1] + v_i[2]*v_j[2]
     return scal_prod
 
+def cross_product(v_i, v_j):
+
+    """Computes the cross product between two vectors"""
+
+    v_k_x = v_i[1]*v_j[2]-v_i[2]*v_j[1]
+    v_k_y = v_i[2]*v_j[0]-v_i[0]*v_j[2]
+    v_k_z = v_i[0]*v_j[1]-v_i[1]*v_j[0]
+    cross_prod = [v_k_x, v_k_y, v_k_z]
+    return cross_prod
+
 def compute_diff_vect(v_i, v_j):
 
     """Computes the diffence between two vectors"""
