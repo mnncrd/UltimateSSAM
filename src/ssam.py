@@ -150,3 +150,6 @@ def main():
     except AssertionError as error:
         print(error)
         print(args.filename, " is not a .pdb file")
+
+if __name__ == '__main__':
+    main()
