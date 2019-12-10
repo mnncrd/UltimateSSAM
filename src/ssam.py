@@ -244,11 +244,11 @@ def open_pdb_file(filename):
     assert filename.lower().endswith(".pdb"), "Program can only work with a .pdb file"
     try:
         with open(filename, "r") as file_pdb:
+            print("Reading file")
             lines = file_pdb.readlines()
             pdb_info, residues = read_pdb_file(lines)
-        file_pdb.close()
-        print("ok")
-        return pdb_info, residues
+            print("ok")
+            return pdb_info, residues
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
@@ -266,14 +266,13 @@ def main():
     #Read the file
     try:
         pdb_info, residues = open_pdb_file(args.filename)
+        #Angles
+        print("Computing angles")
+        find_angles(residues)
+        print("ok")
     except AssertionError as error:
         print(error)
         print(args.filename, " is not a .pdb file")
-
-    #Angles
-    print("Computing angles")
-    find_angles(residues)
-    print("ok")
 
 if __name__ == '__main__':
     main()
