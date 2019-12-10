@@ -21,6 +21,7 @@ class Residue():
         number: A integer indicating the number of the Residue.
         name:  A string indicating the name of the Residue.
         chain: A string indicating on which chain is the Residue.
+        angles: A dictionnary of angles values for the Residue.
     """
 
     def __init__(self, atoms, res_nb=None):
@@ -38,6 +39,13 @@ class Residue():
             self.number = res_nb
         self.name = self.atoms["CA"].aa_name
         self.chain = self.atoms["CA"].aa_chain
+        self.angles = {
+            "TCO":"0.000",
+            "KAPPA":"360.0",
+            "ALPHA":"360.0",
+            "PHI":"360.0",
+            "PSI":"360.0"
+        }
 
 class Atom():
 
