@@ -95,6 +95,17 @@ class Residue():
         elif -180 < angle < 0:
             self.struct["CHR"] = "-"
 
+    def compute_phi(self, oth):
+
+        """Computes phi"""
+
+        v_i = oth.atoms["C"].pos_vector()
+        v_j = self.atoms["N"].pos_vector()
+        v_k = self.atoms["CA"].pos_vector()
+        v_l = self.atoms["C"].pos_vector()
+        angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
+        self.angles["PHI"] = "{:.1f}".format(angle)
+
 class Atom():
 
     """
