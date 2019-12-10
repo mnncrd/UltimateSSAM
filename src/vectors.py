@@ -30,6 +30,13 @@ def cross_product(v_i, v_j):
     cross_prod = [v_k_x, v_k_y, v_k_z]
     return cross_prod
 
+def compute_frac_vect(v_i, div):
+
+    """Computes the ratio of a vector"""
+
+    v_div = [i/div for i in v_i]
+    return v_div
+
 def compute_diff_vect(v_i, v_j):
 
     """Computes the diffence between two vectors"""
