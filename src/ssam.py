@@ -80,6 +80,21 @@ class Residue():
             self.struct["S"] = True
             self.struct["BEND"] = "S"
 
+    def compute_alpha(self, oth_b, oth_a, oth_aa):
+
+        """Computes alpha"""
+
+        v_i = oth_b.atoms["CA"].pos_vector()
+        v_j = self.atoms["CA"].pos_vector()
+        v_k = oth_a.atoms["CA"].pos_vector()
+        v_l = oth_aa.atoms["CA"].pos_vector()
+        angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
+        self.angles["ALPHA"] = "{:.1f}".format(angle)
+        if 0 < angle < 180:
+            self.struct["CHR"] = "+"
+        elif -180 < angle < 0:
+            self.struct["CHR"] = "-"
+
 class Atom():
 
     """
