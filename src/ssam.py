@@ -8,6 +8,7 @@ This program assigns secondary structures to a sequence.
 """
 
 import argparse
+import math
 
 class Atom():
 
@@ -44,6 +45,16 @@ class Atom():
         self.x_coord = float(line[30:38])
         self.y_coord = float(line[38:46])
         self.z_coord = float(line[46:54])
+
+    def compute_distance(self, oth):
+
+        """Computes the distance between two atoms"""
+
+        x_square = (self.x_coord - oth.x_coord)**2
+        y_square = (self.y_coord - oth.y_coord)**2
+        z_square = (self.z_coord - oth.z_coord)**2
+
+        return math.sqrt(x_square + y_square + z_square)
 
 def read_pdb_file(lines):
 
