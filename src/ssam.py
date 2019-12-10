@@ -10,6 +10,8 @@ This program assigns secondary structures to a sequence.
 import argparse
 import math
 
+import angles
+
 class Residue():
     """
     Summary of class Residue.
