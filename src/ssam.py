@@ -85,6 +85,16 @@ class Atom():
 
         return math.sqrt(x_square + y_square + z_square)
 
+    def vector(self, oth):
+
+        """Returns the vector between two atoms"""
+
+        vect_x = self.x_coord - oth.x_coord
+        vect_y = self.y_coord - oth.y_coord
+        vect_z = self.z_coord - oth.z_coord
+        coords = [vect_x, vect_y, vect_z]
+        return coords
+
 def read_pdb_file(lines):
 
     """Stores info"""
