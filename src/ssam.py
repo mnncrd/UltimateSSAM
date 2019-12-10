@@ -9,6 +9,42 @@ This program assigns secondary structures to a sequence.
 
 import argparse
 
+class Atom():
+
+    """
+    Summary of class Atom.
+
+    Lorem ipsum.
+
+    Attributes:
+        code: A dictionnary mapping the 3-letter code to the 1-letter code
+            for the Residue name.
+        atom_name: A dictionary of Atoms instance forming the Residue.
+        aa_name: A string indicating the name of the Residue.
+        aa_chain: A string indicating on which chain is the Residue.
+        aa_nb: A integer indicating the number of the Residue.
+        x_coord: A float representing the x coordinate of the atom.
+        y_coord: A float representing the y coordinate of the atom.
+        z_coord: A float representing the z coordinate of the atom.
+    """
+
+    code = {
+        "ALA":"A", "CYS":"C", "ASP":"D", "GLU":"E", "PHE":"F", "GLY":"G",
+        "HIS":"H", "ILE":"I", "LYS":"K", "LEU":"L", "MET":"M", "ASN":"N",
+        "PRO":"P", "GLN":"Q", "ARG":"R", "SER":"S", "THR":"T", "VAL":"V",
+        "TRP":"W", "TYR":"Y"
+    }
+
+    def __init__(self, line):
+
+        self.atom_name = line[12:16].strip()
+        self.aa_name = self.code[line[17:20]]
+        self.aa_chain = line[21:22]
+        self.aa_nb = int(line[22:26])
+        self.x_coord = float(line[30:38])
+        self.y_coord = float(line[38:46])
+        self.z_coord = float(line[46:54])
+
 def read_pdb_file(lines):
 
     """Stores info"""
