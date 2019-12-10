@@ -12,3 +12,10 @@ def vector_norm(v_i):
 
     v_i_norm = math.sqrt(v_i[0]**2 + v_i[1]**2 + v_i[2]**2)
     return v_i_norm
+
+def scal_product(v_i, v_j):
+
+    """Computes the scalar product between two vectors"""
+
+    scal_prod = v_i[0]*v_j[0] + v_i[1]*v_j[1] + v_i[2]*v_j[2]
+    return scal_prod
