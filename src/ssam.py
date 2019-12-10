@@ -6,11 +6,12 @@ This program assigns secondary structures to a sequence.
 
     $ python ssam.py filename -o output_file
 """
-
+#import
 import argparse
 import math
-
+#import modules
 import angles
+import vectors
 
 class Residue():
     """
@@ -63,6 +64,21 @@ class Residue():
         v_j = oth.atoms["C"].vector(oth.atoms["O"])
         angle = math.cos(angles.compute_angle(v_i, v_j))
         self.angles["TCO"] = "{:.3f}".format(angle)
+
+    def compute_kappa(self, oth_b, oth_a):
+
+        """Computes kappa"""
+
+        v_i = self.atoms["CA"].pos_vector()
+        v_j = oth_b.atoms["CA"].pos_vector()
+        v_k = oth_a.atoms["CA"].pos_vector()
+        v_ij = vectors.compute_diff_vect(v_i, v_j)
+        v_ki = vectors.compute_diff_vect(v_k, v_i)
+        angle = math.degrees(angles.compute_angle(v_ki, v_ij))
+        self.angles["KAPPA"] = "{:.1f}".format(angle)
+        if angle > 70:
+            self.struct["S"] = True
+            self.struct["BEND"] = "S"
 
 class Atom():
 
