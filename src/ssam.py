@@ -237,20 +237,11 @@ def read_pdb_file(lines):
     pdb_info = (header_pdb, organism, molecule, authors)
     return pdb_info, residues
 
-def open_pdb_file(filename):
+def check_pdb_file(filename):
 
-    """Opens the .pdb file and read the lines"""
+    """Check if the .pdb file exists"""
 
-    assert filename.lower().endswith(".pdb"), "Program can only work with a .pdb file"
-    try:
-        with open(filename, "r") as file_pdb:
-            print("Reading file")
-            lines = file_pdb.readlines()
-            pdb_info, residues = read_pdb_file(lines)
-            print("ok")
-            return pdb_info, residues
-    except FileNotFoundError as fnf_error:
-        print(fnf_error)
+    assert filename.lower().endswith(".pdb")
 
 def main():
 
@@ -265,14 +256,21 @@ def main():
 
     #Read the file
     try:
-        pdb_info, residues = open_pdb_file(args.filename)
+        check_pdb_file(args.filename)
+        with open(args.filename, "r") as file_pdb:
+            print("Reading file")
+            lines = file_pdb.readlines()
+            pdb_info, residues = read_pdb_file(lines)
+            print("ok")
+    except AssertionError:
+        print(args.filename, "is not a .pdb file")
+    except FileNotFoundError:
+        print(args.filename, "does not exist")
+    else:
         #Angles
         print("Computing angles")
         find_angles(residues)
         print("ok")
-    except AssertionError as error:
-        print(error)
-        print(args.filename, " is not a .pdb file")
 
 if __name__ == '__main__':
     main()
