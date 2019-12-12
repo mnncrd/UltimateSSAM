@@ -43,11 +43,11 @@ class Residue():
         self.name = self.atoms["CA"].aa_name
         self.chain = self.atoms["CA"].aa_chain
         self.angles = {
-            "TCO":"0.000",
-            "KAPPA":"360.0",
-            "ALPHA":"360.0",
-            "PHI":"360.0",
-            "PSI":"360.0"
+            "TCO":0.000,
+            "KAPPA":360.0,
+            "ALPHA":360.0,
+            "PHI":360.0,
+            "PSI":360.0
         }
         self.struct = {
             "H":False, "B":False, "E":False, "G":False, "I":False, "T":False, "S":False,
