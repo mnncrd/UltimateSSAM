@@ -63,7 +63,7 @@ class Residue():
         v_i = self.atoms["C"].vector(self.atoms["O"])
         v_j = oth.atoms["C"].vector(oth.atoms["O"])
         angle = math.cos(angles.compute_angle(v_i, v_j))
-        self.angles["TCO"] = "{:.3f}".format(angle)
+        self.angles["TCO"] = angle
 
     def compute_kappa(self, oth_b, oth_a):
 
@@ -75,7 +75,7 @@ class Residue():
         v_ij = vectors.compute_diff_vect(v_i, v_j)
         v_ki = vectors.compute_diff_vect(v_k, v_i)
         angle = math.degrees(angles.compute_angle(v_ki, v_ij))
-        self.angles["KAPPA"] = "{:.1f}".format(angle)
+        self.angles["KAPPA"] = angle
         if angle > 70:
             self.struct["S"] = True
             self.struct["BEND"] = "S"
@@ -89,7 +89,7 @@ class Residue():
         v_k = oth_a.atoms["CA"].pos_vector()
         v_l = oth_aa.atoms["CA"].pos_vector()
         angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
-        self.angles["ALPHA"] = "{:.1f}".format(angle)
+        self.angles["ALPHA"] = angle
         if 0 < angle < 180:
             self.struct["CHR"] = "+"
         elif -180 < angle < 0:
@@ -104,7 +104,7 @@ class Residue():
         v_k = self.atoms["CA"].pos_vector()
         v_l = self.atoms["C"].pos_vector()
         angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
-        self.angles["PHI"] = "{:.1f}".format(angle)
+        self.angles["PHI"] = angle
 
     def compute_psi(self, oth):
 
@@ -115,7 +115,7 @@ class Residue():
         v_k = self.atoms["C"].pos_vector()
         v_l = oth.atoms["N"].pos_vector()
         angle = angles.compute_dihedral_angle(v_i, v_j, v_k, v_l)
-        self.angles["PSI"] = "{:.1f}".format(angle)
+        self.angles["PSI"] = angle
 
 class Atom():
 
