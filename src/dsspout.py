@@ -20,11 +20,13 @@ def out_residues(out_file, residues):
             "{:>1s}{:>1s}"
             "{:62s}"
             "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
+            "{:7.1f}{:7.1f}{:7.1f}"
             "\n".format(i+1, res.number, res.chain, res.name,
             "", res.struct["3"], res.struct["4"], res.struct["5"], 
             res.struct["BEND"], res.struct["CHR"],
             "",
             res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
-			res.angles["PHI"], res.angles["PSI"])
+			res.angles["PHI"], res.angles["PSI"],
+			res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord)
         )
         out_file.write(line)
