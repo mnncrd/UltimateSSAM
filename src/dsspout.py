@@ -1,3 +1,9 @@
+"""Output text module.
+
+This module generates the text to write to the dssp file. For instance, it
+writes the information about each residue.
+"""
+
 def out_residues(out_file, residues):
 
     """Write information about each residue"""
