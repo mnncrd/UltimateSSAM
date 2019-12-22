@@ -13,3 +13,9 @@ def out_residues(out_file, residues):
         "    O-->H-N    TCO  KAPPA ALPHA  PHI   PSI    X-CA   Y-CA   Z-CA"
     )
     out_file.write(summary_dssp+"\n")
+    for i, res in enumerate(residues):
+        line = (
+            "{:>5d}{:>5d} {:>1s} {:>1s}  "
+            "\n".format(i+1, res.number, res.chain, res.name)
+        )
+        out_file.write(line)
