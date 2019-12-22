@@ -16,6 +16,10 @@ def out_residues(out_file, residues):
     for i, res in enumerate(residues):
         line = (
             "{:>5d}{:>5d} {:>1s} {:>1s}  "
-            "\n".format(i+1, res.number, res.chain, res.name)
+            "{:>1s} {:>1s}{:>1s}{:>1s}"
+            "{:>1s}{:>1s}"
+            "\n".format(i+1, res.number, res.chain, res.name,
+            "", res.struct["3"], res.struct["4"], res.struct["5"], 
+            res.struct["BEND"], res.struct["CHR"])
         )
         out_file.write(line)
