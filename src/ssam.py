@@ -57,6 +57,23 @@ class Residue():
             "CHR":" "
         }
 
+    def compute_energy(self, oth):
+
+        """Computes the energy between two H-bonding groups"""
+
+        if self.atoms["H"] is not None and oth.atoms["H"] is not None:
+            q_1 = 0.42
+            q_2 = 0.2
+            dim_f = 332
+            dist_on = self.atoms["O"].compute_distance(oth.atoms["N"])
+            dist_ch = self.atoms["C"].compute_distance(oth.atoms["H"])
+            dist_oh = self.atoms["O"].compute_distance(oth.atoms["H"])
+            dist_cn = self.atoms["C"].compute_distance(oth.atoms["N"])
+            energy = q_1*q_2*((1/dist_on)+(1/dist_ch)-(1/dist_oh)-(1/dist_cn))*dim_f
+        else:
+            energy = 0
+        return energy
+
     def compute_tco(self, oth):
 
         """Computes the tco"""
