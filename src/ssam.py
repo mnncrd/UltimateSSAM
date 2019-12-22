@@ -12,6 +12,7 @@ import math
 #import modules
 import angles
 import vectors
+import dsspout
 
 class Residue():
     """
@@ -183,6 +184,15 @@ class Atom():
         coords = [vect_x, vect_y, vect_z]
         return coords
 
+def write_dssp_file(filename, residues):
+
+    """Create the output .dssp file"""
+
+    file_dssp = open(filename, "w+")
+    #Residues
+    dsspout.out_residues(file_dssp, residues)
+    file_dssp.close()
+
 def find_angles(residues):
 
     """Computes all angles"""
@@ -270,6 +280,8 @@ def main():
         #Angles
         print("Computing angles")
         find_angles(residues)
+        print("ok")
+        write_dssp_file(args.o, residues)
         print("ok")
 
 if __name__ == '__main__':
