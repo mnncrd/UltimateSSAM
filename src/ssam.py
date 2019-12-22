@@ -184,11 +184,13 @@ class Atom():
         coords = [vect_x, vect_y, vect_z]
         return coords
 
-def write_dssp_file(filename, residues):
+def write_dssp_file(filename, pdb_info, residues):
 
     """Create the output .dssp file"""
 
     file_dssp = open(filename, "w+")
+    #PDB info
+    dsspout.out_pdb_info(file_dssp, pdb_info)
     #Residues
     dsspout.out_residues(file_dssp, residues)
     file_dssp.close()
@@ -281,7 +283,7 @@ def main():
         print("Computing angles")
         find_angles(residues)
         print("ok")
-        write_dssp_file(args.o, residues)
+        write_dssp_file(args.o, pdb_info, residues)
         print("ok")
 
 if __name__ == '__main__':
