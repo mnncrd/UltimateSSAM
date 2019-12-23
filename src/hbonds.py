@@ -1,5 +1,5 @@
-"""Secondary structures assignment module.
+"""Hydrogen bonds module.
 
-This module checks if a residue meets the requirement for every secondary structure.
-For instance, parallel bridges.
+This module finds hydrogen bonds in the protein. For instance, it finds all
+hydrogen bonds between all atoms i and i+j for a given j.
 """
