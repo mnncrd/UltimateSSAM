@@ -40,23 +40,7 @@ def out_residues(out_file, residues):
     )
     out_file.write(summary_dssp+"\n")
     for res in residues:
-        if res.number - prev_res == 1:
-            line = (
-                "{:>5d}{:>5d} {:>1s} {:>1s}  "
-                "{:>1s} {:>1s}{:>1s}{:>1s}"
-                "{:>1s}{:>1s}"
-                "{:62s}"
-                "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
-                "{:7.1f}{:7.1f}{:7.1f}"
-                "\n".format(i, res.number, res.chain, res.name,
-                "", res.struct["3"], res.struct["4"], res.struct["5"], 
-                res.struct["BEND"], res.struct["CHR"],
-                "",
-                res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
-				res.angles["PHI"], res.angles["PSI"],
-				res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord)
-            )
-        else:
+        if res.number - prev_res != 1:
             line = (
                 "{:>5d}{:>5s} {:>1s} {:>1s}  "
                 "{:>1s} {:>1s}{:>1s}{:>1s}"
@@ -69,8 +53,25 @@ def out_residues(out_file, residues):
                 "", "",
                 "",
                 0, 360, 360, 360, 360,
-				0, 0, 0)
+            	0, 0, 0)
             )
+            out_file.write(line)
+            i += 1
+        line = (
+            "{:>5d}{:>5d} {:>1s} {:>1s}  "
+            "{:>1s} {:>1s}{:>1s}{:>1s}"
+            "{:>1s}{:>1s}"
+            "{:62s}"
+            "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
+            "{:7.1f}{:7.1f}{:7.1f}"
+            "\n".format(i, res.number, res.chain, res.name,
+            "", res.struct["3"], res.struct["4"], res.struct["5"], 
+            res.struct["BEND"], res.struct["CHR"],
+            "",
+            res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
+			res.angles["PHI"], res.angles["PSI"],
+			res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord)
+        )
         out_file.write(line)
         i += 1
         prev_res = res.number
