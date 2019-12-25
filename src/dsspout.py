@@ -32,25 +32,45 @@ def out_residues(out_file, residues):
 
     """Write information about each residue"""
 
+    i = 1
+    prev_res = residues[0].number-1
     summary_dssp = (
         "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     N-H-->O    O-->H-N    N-H-->O"
         "    O-->H-N    TCO  KAPPA ALPHA  PHI   PSI    X-CA   Y-CA   Z-CA"
     )
     out_file.write(summary_dssp+"\n")
-    for i, res in enumerate(residues):
-        line = (
-            "{:>5d}{:>5d} {:>1s} {:>1s}  "
-            "{:>1s} {:>1s}{:>1s}{:>1s}"
-            "{:>1s}{:>1s}"
-            "{:62s}"
-            "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
-            "{:7.1f}{:7.1f}{:7.1f}"
-            "\n".format(i+1, res.number, res.chain, res.name,
-            "", res.struct["3"], res.struct["4"], res.struct["5"], 
-            res.struct["BEND"], res.struct["CHR"],
-            "",
-            res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
-			res.angles["PHI"], res.angles["PSI"],
-			res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord)
-        )
+    for res in residues:
+        if res.number - prev_res == 1:
+            line = (
+                "{:>5d}{:>5d} {:>1s} {:>1s}  "
+                "{:>1s} {:>1s}{:>1s}{:>1s}"
+                "{:>1s}{:>1s}"
+                "{:62s}"
+                "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
+                "{:7.1f}{:7.1f}{:7.1f}"
+                "\n".format(i, res.number, res.chain, res.name,
+                "", res.struct["3"], res.struct["4"], res.struct["5"], 
+                res.struct["BEND"], res.struct["CHR"],
+                "",
+                res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
+				res.angles["PHI"], res.angles["PSI"],
+				res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord)
+            )
+        else:
+            line = (
+                "{:>5d}{:>5s} {:>1s} {:>1s}  "
+                "{:>1s} {:>1s}{:>1s}{:>1s}"
+                "{:>1s}{:>1s}"
+                "{:62s}"
+                "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
+                "{:7.1f}{:7.1f}{:7.1f}"
+                "\n".format(i, "", "", "!",
+                "", "", "", "", 
+                "", "",
+                "",
+                0, 360, 360, 360, 360,
+				0, 0, 0)
+            )
         out_file.write(line)
+        i += 1
+        prev_res = res.number
