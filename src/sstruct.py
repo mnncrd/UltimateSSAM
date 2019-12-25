@@ -66,7 +66,11 @@ def n_turn(residues, n_val):
     indices = [residue.number for residue in residues]
     nb_res = len(residues)
     for i in range(nb_res-n_val):
-        if residues[i].number+n_val in indices:
+        n_res = 0
+        for j in range(1, n_val+1):
+            if residues[i].number+j in indices:
+                n_res += 1
+        if n_res == n_val:
             energy = residues[i].compute_energy(residues[i+n_val])
             if energy < -0.5:
                 nturns.append(residues[i])
