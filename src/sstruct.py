@@ -4,6 +4,20 @@ This module checks if a residue meets the requirement for every secondary struct
 For instance, parallel bridges.
 """
 
+def final_bridges(bridges, helices):
+
+    """Removes bridges that are in an helix"""
+
+    h_count = len(helices)
+    b_count = len(bridges)
+    if h_count > 0 and b_count > 0:
+        for i in range(h_count):
+            for j in range(b_count):
+                if len(set(helices[i]) & set(bridges[j])) > 0:
+                    bridges[j] = ()
+    bridges = [bridge for bridge in bridges if len(bridge) == 2]
+    return bridges
+
 def anti_bridge(residues):
 
     """Finds antiparallel bridges"""
