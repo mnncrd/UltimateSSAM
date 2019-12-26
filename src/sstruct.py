@@ -85,9 +85,6 @@ def helix(residues, nturns, n_val):
                 helices[i+1] = list(set(helices[i]) | set(helices[i+1]))
                 helices[i] = []
     helices = sort_helices(helices, n_val)
-    for hlx in helices:
-        for res in hlx:
-            print(res.number)
     return helices
 
 def n_turn(residues, n_val):
