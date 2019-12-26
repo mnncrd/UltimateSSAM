@@ -65,6 +65,31 @@ def sort_helices(helices, min_len):
     helices = [sorted(hlx, key=lambda res: res.number) for hlx in helices if len(hlx) >= min_len]
     return helices
 
+def helix(residues, nturns, n_val):
+
+    """Finds helices"""
+
+    helices = []
+    indices = [turn.number for turn in nturns]
+    nb_res = len(residues)
+    for i in range(1, nb_res-n_val):
+        hlx = []
+        if residues[i].number in indices and residues[i-1].number in indices:
+            for j in range(n_val):
+                hlx.append(residues[i+j])
+            helices.append(hlx)
+    h_count = len(helices)
+    if h_count > 2:
+        for i in range(h_count-1):
+            if len(set(helices[i]) & set(helices[i+1])) > 0:
+                helices[i+1] = list(set(helices[i]) | set(helices[i+1]))
+                helices[i] = []
+    helices = sort_helices(helices, n_val)
+    for hlx in helices:
+        for res in hlx:
+            print(res.number)
+    return helices
+
 def n_turn(residues, n_val):
 
     """Finds n-turns"""
