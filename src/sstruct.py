@@ -58,6 +58,13 @@ def para_bridge(residues):
                         pbridges.append(bridge)
     return pbridges
 
+def sort_helices(helices, min_len):
+
+    """Sort residues by number and filter helices smaller than min_len"""
+
+    helices = [sorted(hlx, key=lambda res: res.number) for hlx in helices if len(hlx) >= min_len]
+    return helices
+
 def n_turn(residues, n_val):
 
     """Finds n-turns"""
