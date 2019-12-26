@@ -4,6 +4,38 @@ This module checks if a residue meets the requirement for every secondary struct
 For instance, parallel bridges.
 """
 
+def para_ladder(bridges):
+
+    """Finds ladders"""
+
+    indices_bridges = [(bridge[0].number, bridge[1].number) for bridge in bridges]
+    bridge_in_ladder = []
+    ladders = []
+    for i in indices_bridges:
+        idx_first_bridge = indices_bridges.index(i)
+        if (i[0]+1, i[1]+1) in indices_bridges:
+            idx_second_bridge = indices_bridges.index((i[0]+1, i[1]+1))
+            if bridges[idx_first_bridge] not in bridge_in_ladder:
+                ladder = [bridges[idx_first_bridge], bridges[idx_second_bridge]]
+                bridge_in_ladder.append(bridges[idx_first_bridge])
+                bridge_in_ladder.append(bridges[idx_second_bridge])
+                bridges[idx_first_bridge][0].struct["E"] = True
+                bridges[idx_first_bridge][1].struct["E"] = True
+                bridges[idx_second_bridge][0].struct["E"] = True
+                bridges[idx_second_bridge][1].struct["E"] = True
+                ladders.append(ladder)
+            else:
+                bridge_in_ladder.append(bridges[idx_second_bridge])
+                for ladder in ladders:
+                    if bridges[idx_first_bridge] in ladder:
+                        bridges[idx_second_bridge][0].struct["E"] = True
+                        bridges[idx_second_bridge][1].struct["E"] = True
+                        ladder.append(bridges[idx_second_bridge])
+        else:
+            if bridges[idx_first_bridge] not in bridge_in_ladder:
+                ladders.append([bridges[idx_first_bridge]])
+    return ladders
+
 def final_bridges(bridges, helices):
 
     """Removes bridges that are in an helix"""
