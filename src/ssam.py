@@ -52,6 +52,7 @@ class Residue():
             "PSI":360.0
         }
         self.struct = {
+            "STRC":""
             "H":False, "B":False, "E":False, "G":False, "I":False, "T":False, "S":False,
             "3":" ", "4":" ", "5":" ",
             "BEND":" ",
