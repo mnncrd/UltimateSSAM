@@ -156,6 +156,20 @@ def not_in_bridge(helices, bridges):
                     helices[i] = set(helices[i]) - set(bridges[j])
     return helices
 
+def assign_helix(helices, n_val):
+
+    """Assigns a helix to residues in helices and a turn to residues in too
+    short helices"""
+
+    h_d = {3:"G", 4:"H", 5:"I"}
+    for helice in helices:
+        if len(helice) >= n_val:
+            for res in helice:
+                res.struct[h_d[n_val]] = True
+        else:
+            for res in helice:
+                res.struct["T"] = True
+
 def which_helix(helices_1, helices_2):
 
     """Remove residues that are in two helices from the lower priority helix"""
