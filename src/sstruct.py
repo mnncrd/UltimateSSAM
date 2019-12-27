@@ -143,6 +143,19 @@ def sort_helices(helices, min_len):
     helices = [sorted(hlx, key=lambda res: res.number) for hlx in helices if len(hlx) >= min_len]
     return helices
 
+def which_helix(helices_1, helices_2):
+
+    """Remove residues that are in two helices from the lower priority helix"""
+
+    h1_count = len(helices_1)
+    h2_count = len(helices_2)
+    if h1_count > 0 and h2_count > 0:
+        for i in range(h1_count):
+            for j in range(h2_count):
+                if len(set(helices_1[i]) & set(helices_2[j])) > 0:
+                    helices_1[i] = set(helices_1[i]) - set(helices_2[j])
+    return helices_1
+
 def helix(residues, nturns, n_val):
 
     """Finds helices"""
