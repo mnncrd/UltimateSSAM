@@ -143,6 +143,19 @@ def sort_helices(helices, min_len):
     helices = [sorted(hlx, key=lambda res: res.number) for hlx in helices if len(hlx) >= min_len]
     return helices
 
+def not_in_bridge(helices, bridges):
+
+    """Remove residues that are in a bridge from helices"""
+
+    h_count = len(helices)
+    b_count = len(bridges)
+    if h_count > 0 and b_count > 0:
+        for i in range(h_count):
+            for j in range(b_count):
+                if len(set(helices[i]) & set(bridges[j])) > 0:
+                    helices[i] = set(helices[i]) - set(bridges[j])
+    return helices
+
 def which_helix(helices_1, helices_2):
 
     """Remove residues that are in two helices from the lower priority helix"""
