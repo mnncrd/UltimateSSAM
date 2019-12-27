@@ -65,7 +65,7 @@ def out_residues(out_file, residues):
             "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
             "{:7.1f}{:7.1f}{:7.1f}"
             "\n".format(i, res.number, res.chain, res.name,
-            "", res.struct["3"], res.struct["4"], res.struct["5"], 
+            res.struct["STRC"], res.struct["3"], res.struct["4"], res.struct["5"], 
             res.struct["BEND"], res.struct["CHR"],
             "",
             res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
