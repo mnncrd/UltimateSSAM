@@ -4,6 +4,26 @@ This module checks if a residue meets the requirement for every secondary struct
 For instance, parallel bridges.
 """
 
+def structure_to_print(residues):
+
+    """Finds which structure to print"""
+
+    for res in residues:
+        if res.struct["S"]:
+            res.struct["STRC"] = "S"
+        if res.struct["T"]:
+            res.struct["STRC"] = "T"
+        if res.struct["I"]:
+            res.struct["STRC"] = "I"
+        if res.struct["G"]:
+            res.struct["STRC"] = "G"
+        if res.struct["B"]:
+            res.struct["STRC"] = "B"
+        if res.struct["E"]:
+            res.struct["STRC"] = "E"
+        if res.struct["H"]:
+            res.struct["STRC"] = "H"
+
 def anti_ladder(bridges):
 
     """Finds ladders"""
