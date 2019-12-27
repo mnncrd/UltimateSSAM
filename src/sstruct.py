@@ -172,7 +172,7 @@ def assign_helix(helices, n_val):
 
 def which_helix(helices_1, helices_2):
 
-    """Remove residues that are in two helices from the lower priority helix"""
+    """Removes residues that are in two helices from the lower priority helix"""
 
     h1_count = len(helices_1)
     h2_count = len(helices_2)
