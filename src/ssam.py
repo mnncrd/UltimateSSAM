@@ -13,6 +13,7 @@ import math
 import angles
 import vectors
 import dsspout
+import sstruct
 
 class Residue():
     """
