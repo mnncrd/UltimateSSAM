@@ -206,6 +206,26 @@ def which_helix(helices_1, helices_2):
                     helices_1[i] = set(helices_1[i]) - set(helices_2[j])
     return helices_1
 
+def final_helices(g_helices, h_helices, i_helices, anti_bridges, para_bridges):
+
+    """Return helices"""
+
+    i_helices = which_helix(i_helices, g_helices)
+    i_helices = which_helix(i_helices, h_helices)
+    g_helices = which_helix(g_helices, h_helices)
+    i_helices = not_in_bridge(i_helices, anti_bridges)
+    i_helices = not_in_bridge(i_helices, para_bridges)
+    g_helices = not_in_bridge(g_helices, anti_bridges)
+    g_helices = not_in_bridge(g_helices, para_bridges)
+    assign_helix(g_helices, 3)
+    assign_helix(h_helices, 4)
+    assign_helix(i_helices, 5)
+    g_helices = sort_helices(g_helices, 3)
+    h_helices = sort_helices(h_helices, 4)
+    i_helices = sort_helices(i_helices, 5)
+    helices = [g_helices, h_helices, i_helices]
+    return helices
+
 def helix(residues, nturns, n_val):
 
     """Finds helices"""
