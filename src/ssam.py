@@ -207,22 +207,22 @@ def secondary_struct(residues):
 
     """Assigns secondary structures"""
 
-        three_turns = sstruct.n_turn(residues, 3)
-        four_turns = sstruct.n_turn(residues, 4)
-        five_turns = sstruct.n_turn(residues, 5)
-        g_helices = sstruct.helix(residues, three_turns, 3)
-        h_helices = sstruct.helix(residues, four_turns, 4)
-        i_helices = sstruct.helix(residues, five_turns, 5)
-        para_bridges = sstruct.para_bridge(residues)
-        para_bridges = sstruct.final_bridges(para_bridges, h_helices)
-        anti_bridges = sstruct.anti_bridge(residues)
-        anti_bridges = sstruct.final_bridges(anti_bridges, h_helices)
-        para_ladders = sstruct.para_ladder(para_bridges)
-        anti_ladders = sstruct.anti_ladder(anti_bridges)
-        helices = sstruct.final_helices(g_helices, h_helices, i_helices, anti_bridges, para_bridges)
-        sstruct.structure_to_print(residues)
-        structures = (helices, anti_ladders, para_ladders)
-        return structures
+    three_turns = sstruct.n_turn(residues, 3)
+    four_turns = sstruct.n_turn(residues, 4)
+    five_turns = sstruct.n_turn(residues, 5)
+    g_helices = sstruct.helix(residues, three_turns, 3)
+    h_helices = sstruct.helix(residues, four_turns, 4)
+    i_helices = sstruct.helix(residues, five_turns, 5)
+    para_bridges = sstruct.para_bridge(residues)
+    para_bridges = sstruct.final_bridges(para_bridges, h_helices)
+    anti_bridges = sstruct.anti_bridge(residues)
+    anti_bridges = sstruct.final_bridges(anti_bridges, h_helices)
+    para_ladders = sstruct.para_ladder(para_bridges)
+    anti_ladders = sstruct.anti_ladder(anti_bridges)
+    helices = sstruct.final_helices(g_helices, h_helices, i_helices, anti_bridges, para_bridges)
+    sstruct.structure_to_print(residues)
+    structures = (helices, anti_ladders, para_ladders)
+    return structures
 
 def write_dssp_file(filename, pdb_info, residues):
 
