@@ -244,7 +244,6 @@ def n_turn(residues, n_val):
             energy = residues[i].compute_energy(residues[i+n_val])
             if energy < -0.5:
                 nturns.append(residues[i])
-                residues[i].struct["T"] = True
                 if residues[i].struct[str(n_val)] != "<":
                     residues[i].struct[str(n_val)] = ">"
                 else:
@@ -254,6 +253,7 @@ def n_turn(residues, n_val):
                 else:
                     residues[i+n_val].struct[str(n_val)] = "X"
                 for j in range(1, n_val):
+                    residues[i+j].struct["T"] = True
                     if residues[i+j].struct[str(n_val)] == " ":
                         residues[i+j].struct[str(n_val)] = str(n_val)
     return nturns
