@@ -302,6 +302,7 @@ def main():
         print("Computing angles")
         find_angles(residues)
         print("ok")
+        print("Write .dssp file")
         write_dssp_file(args.o, pdb_info, residues)
         print("ok")
 
