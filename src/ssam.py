@@ -224,7 +224,7 @@ def secondary_struct(residues):
     structures = (helices, anti_ladders, para_ladders)
     return structures
 
-def write_dssp_file(filename, pdb_info, residues):
+def write_dssp_file(filename, pdb_info, residues, structures):
 
     """Create the output .dssp file"""
 
@@ -327,7 +327,7 @@ def main():
         structures = secondary_struct(residues)
         print("ok")
         print("Write .dssp file")
-        write_dssp_file(args.o, pdb_info, residues)
+        write_dssp_file(args.o, pdb_info, residues, structures)
         print("ok")
 
 if __name__ == '__main__':
