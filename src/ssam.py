@@ -301,23 +301,24 @@ def main():
 
     #Get the arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("filename", help="The file to assign a secondary structure to", type=str)
+    parser.add_argument("ssam", help="The secondary structure assignment method to use", type=str)
+    parser.add_argument("-i", help="The file to assign a secondary structure to", type=str)
     parser.add_argument("-o", type=str)
     parser.add_argument("-hy", "--hydrogen", action="store_true", help="add hydrogen atoms")
     args = parser.parse_args()
 
     #Read the file
     try:
-        check_pdb_file(args.filename)
-        with open(args.filename, "r") as file_pdb:
+        check_pdb_file(args.i)
+        with open(args.i, "r") as file_pdb:
             print("Reading file")
             lines = file_pdb.readlines()
             pdb_info, residues = read_pdb_file(lines)
             print("ok")
     except AssertionError:
-        print(args.filename, "is not a .pdb file")
+        print(args.i, "is not a .pdb file")
     except FileNotFoundError:
-        print(args.filename, "does not exist")
+        print(args.i, "does not exist")
     else:
         #Angles
         print("Computing angles")
