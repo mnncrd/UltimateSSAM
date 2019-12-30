@@ -28,5 +28,6 @@ def compute_dihedral_angle(v_i, v_j, v_k, v_l):
     cp_ijkl = vectors.cross_product(cp_ijk, cp_jkl)
     norm_v_kj = vectors.vector_norm(v_kj)
     unit_v_kj = vectors.compute_frac_vect(v_kj, norm_v_kj)
-    angle = math.atan2(vectors.scal_product(cp_ijkl, unit_v_kj), vectors.scal_product(cp_ijk, cp_jkl))
+    angle = math.atan2(vectors.scal_product(cp_ijkl, unit_v_kj),
+                       vectors.scal_product(cp_ijk, cp_jkl))
     return math.degrees(angle)
