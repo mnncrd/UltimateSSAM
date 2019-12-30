@@ -301,7 +301,7 @@ def helix(residues, nturns, n_val):
                 hlx.append(residues[i+j])
             helices.append(hlx)
     h_count = len(helices)
-    if h_count > 2:
+    if h_count > 1:
         for i in range(h_count-1):
             if len(set(helices[i]) & set(helices[i+1])) > 0:
                 helices[i+1] = list(set(helices[i]) | set(helices[i+1]))
