@@ -24,6 +24,33 @@ def structure_to_print(residues):
         if res.struct["H"]:
             res.struct["STRC"] = "H"
 
+def sheet(para_ladders, anti_ladders):
+
+    """Finds sheets"""
+
+    ladders = para_ladders + anti_ladders
+    res_in_ladders = []
+    for ladder in ladders:
+        res = []
+        if len(ladder) > 1:
+            for bridge in ladder:
+                res.append(bridge[0])
+                res.append(bridge[1])
+            res_in_ladders.append(res)
+    ladders = res_in_ladders
+    l_count = len(ladders)
+    if l_count > 1:
+        for i in range(l_count-1):
+            if len(set(ladders[i]) & set(ladders[i+1])) > 0:
+                ladders[i+1] = list(set(ladders[i]) | set(ladders[i+1]))
+                ladders[i] = []
+    sheets = [sorted(lad, key=lambda res: res.number) for lad in ladders if len(lad)>0]
+    alphabet = {i:chr(65+i) for i in range(26)}
+    for i, sht in enumerate(sheets):
+        for res in sht:
+            res.struct["SHEET"] = alphabet[i%26]
+    return sheets
+
 def anti_ladder(bridges):
 
     """Finds ladders"""
