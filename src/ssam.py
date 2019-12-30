@@ -56,7 +56,8 @@ class Residue():
             "H":False, "B":False, "E":False, "G":False, "I":False, "T":False, "S":False,
             "3":" ", "4":" ", "5":" ",
             "BEND":" ",
-            "CHR":" "
+            "CHR":" ",
+            "SHEET": " "
         }
 
     def compute_energy(self, oth):
