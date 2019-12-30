@@ -44,7 +44,7 @@ def sheet(para_ladders, anti_ladders):
             if len(set(ladders[i]) & set(ladders[i+1])) > 0:
                 ladders[i+1] = list(set(ladders[i]) | set(ladders[i+1]))
                 ladders[i] = []
-    sheets = [sorted(lad, key=lambda res: res.number) for lad in ladders if len(lad)>0]
+    sheets = [sorted(lad, key=lambda res: res.number) for lad in ladders if len(lad) > 0]
     alphabet = {i:chr(65+i) for i in range(26)}
     for i, sht in enumerate(sheets):
         for res in sht:
