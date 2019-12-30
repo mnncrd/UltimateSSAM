@@ -50,12 +50,13 @@ def out_residues(out_file, residues):
                 "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
                 "{:7.1f}{:7.1f}{:7.1f}"
                 "\n".format(i, "", "", "!",
-                "", "", "", "", 
-                "", "",
-                "", "", 0, 0, "",
-                "",
-                0, 360, 360, 360, 360,
-            	0, 0, 0)
+                            "", "", "", "",
+                            "", "",
+                            "", "", 0, 0, "",
+                            "",
+                            0, 360, 360, 360, 360,
+                            0, 0, 0
+                            )
             )
             out_file.write(line)
             i += 1
@@ -68,15 +69,16 @@ def out_residues(out_file, residues):
             "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
             "{:7.1f}{:7.1f}{:7.1f}"
             "\n".format(i, res.number, res.chain, res.name,
-            res.struct["STRC"], res.struct["3"], res.struct["4"], res.struct["5"], 
-            res.struct["BEND"], res.struct["CHR"],
-            res.struct["LAD1"], res.struct["LAD2"], 
-            res.struct["BP1"], res.struct["BP2"], 
-            res.struct["SHEET"],
-            "",
-            res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"], 
-			res.angles["PHI"], res.angles["PSI"],
-			res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord)
+                        res.struct["STRC"], res.struct["3"], res.struct["4"], res.struct["5"],
+                        res.struct["BEND"], res.struct["CHR"],
+                        res.struct["LAD1"], res.struct["LAD2"],
+                        res.struct["BP1"], res.struct["BP2"],
+                        res.struct["SHEET"],
+                        "",
+                        res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"],
+                        res.angles["PHI"], res.angles["PSI"],
+                        res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord
+                        )
         )
         out_file.write(line)
         i += 1
