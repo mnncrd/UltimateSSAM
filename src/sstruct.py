@@ -81,6 +81,23 @@ def anti_ladder(bridges):
         else:
             if bridges[idx_first_bridge] not in bridge_in_ladder:
                 ladders.append([bridges[idx_first_bridge]])
+    alphabet = {i:chr(65+i) for i in range(26)}
+    for i, lad in enumerate(ladders):
+        res_in_lad_1, res_in_lad_2 = 0, 0
+        for bridge in lad:
+            if bridge[0].struct["LAD1"] != "":
+                res_in_lad_1 += 1
+            if bridge[1].struct["LAD1"] != "":
+                res_in_lad_2 += 1
+        for bridge in lad:
+            if res_in_lad_1 == 0:
+                bridge[0].struct["LAD1"] = alphabet[i%26]
+            else:
+                bridge[0].struct["LAD2"] = alphabet[i%26]
+            if res_in_lad_2 == 0:    
+                bridge[1].struct["LAD1"] = alphabet[i%26]
+            else:
+                bridge[1].struct["LAD2"] = alphabet[i%26]
     return ladders
 
 def para_ladder(bridges):
@@ -113,6 +130,23 @@ def para_ladder(bridges):
         else:
             if bridges[idx_first_bridge] not in bridge_in_ladder:
                 ladders.append([bridges[idx_first_bridge]])
+    alphabet = {i:chr(65+i).lower() for i in range(26)}
+    for i, lad in enumerate(ladders):
+        res_in_lad_1, res_in_lad_2 = 0, 0
+        for bridge in lad:
+            if bridge[0].struct["LAD1"] != "":
+                res_in_lad_1 += 1
+            if bridge[1].struct["LAD1"] != "":
+                res_in_lad_2 += 1
+        for bridge in lad:
+            if res_in_lad_1 == 0:
+                bridge[0].struct["LAD1"] = alphabet[i%26]
+            else:
+                bridge[0].struct["LAD2"] = alphabet[i%26]
+            if res_in_lad_2 == 0:    
+                bridge[1].struct["LAD1"] = alphabet[i%26]
+            else:
+                bridge[1].struct["LAD2"] = alphabet[i%26]
     return ladders
 
 def final_bridges(bridges, helices):
