@@ -220,9 +220,10 @@ def secondary_struct(residues):
     anti_bridges = sstruct.final_bridges(anti_bridges, h_helices)
     para_ladders = sstruct.para_ladder(para_bridges)
     anti_ladders = sstruct.anti_ladder(anti_bridges)
+    sheets = sstruct.sheet(para_ladders, anti_ladders)
     helices = sstruct.final_helices(g_helices, h_helices, i_helices, anti_bridges, para_bridges)
     sstruct.structure_to_print(residues)
-    structures = (helices, anti_ladders, para_ladders)
+    structures = (helices, anti_ladders, para_ladders, sheets)
     return structures
 
 def write_dssp_file(filename, pdb_info, residues, structures):
