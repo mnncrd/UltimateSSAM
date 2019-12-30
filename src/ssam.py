@@ -9,6 +9,7 @@ This program assigns secondary structures to a sequence.
 #import
 import argparse
 import math
+import sys
 #import modules
 import angles
 import vectors
@@ -58,7 +59,7 @@ class Residue():
             "BEND":"",
             "CHR":"",
             "SHEET": "",
-            "LAD1":"", "LAD2":"", 
+            "LAD1":"", "LAD2":"",
             "BP1":0, "BP2":0
         }
 
@@ -297,7 +298,15 @@ def check_pdb_file(filename):
 
     """Check if the .pdb file exists"""
 
-    assert filename.lower().endswith(".pdb")
+    assert filename.lower().endswith(".pdb"), "{} is not a .pdb file".format(filename)
+
+def check_residues_order(residues):
+
+    """Check if the residues are stored in sequential order"""
+
+    res_nb = [residue.number for residue in residues]
+    ord_res_nb = sorted(res_nb)
+    assert res_nb == ord_res_nb, "The residues are not in sequential order"
 
 def main():
 
@@ -318,22 +327,22 @@ def main():
             print("Reading file")
             lines = file_pdb.readlines()
             pdb_info, residues = read_pdb_file(lines)
+            check_residues_order(residues)
             print("ok")
-    except AssertionError:
-        print(args.i, "is not a .pdb file")
+    except AssertionError as error:
+        sys.exit(error)
     except FileNotFoundError:
-        print(args.i, "does not exist")
-    else:
-        #Angles
-        print("Computing angles")
-        find_angles(residues)
-        print("ok")
-        print("Assign secondary structures")
-        structures = secondary_struct(residues)
-        print("ok")
-        print("Write .dssp file")
-        write_dssp_file(args.o, pdb_info, residues, structures)
-        print("ok")
+        sys.exit("{} does not exist".format(args.i))
+    #Angles
+    print("Computing angles")
+    find_angles(residues)
+    print("ok")
+    print("Assign secondary structures")
+    structures = secondary_struct(residues)
+    print("ok")
+    print("Write .dssp file")
+    write_dssp_file(args.o, pdb_info, residues, structures)
+    print("ok")
 
 if __name__ == '__main__':
     main()
