@@ -33,6 +33,7 @@ def out_residues(out_file, residues):
     """Write information about each residue"""
 
     i = 1
+    current_chain = residues[0].chain
     prev_res = residues[0].number-1
     summary_dssp = (
         "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     N-H-->O    O-->H-N    N-H-->O"
@@ -40,7 +41,28 @@ def out_residues(out_file, residues):
     )
     out_file.write(summary_dssp+"\n")
     for res in residues:
-        if res.number - prev_res != 1:
+        if res.chain != current_chain:
+            line = (
+                "{:>5d}{:>5s} {:>1s} {:>2s} "
+                "{:>1s} {:>1s}{:>1s}{:>1s}"
+                "{:>1s}{:>1s}"
+                "{:1s}{:1s}{:4d}{:4d}{:1s}"
+                "{:51s}"
+                "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
+                "{:7.1f}{:7.1f}{:7.1f}"
+                "\n".format(i, "", "", "!*",
+                            "", "", "", "",
+                            "", "",
+                            "", "", 0, 0, "",
+                            "",
+                            0, 360, 360, 360, 360,
+                            0, 0, 0
+                            )
+            )
+            out_file.write(line)
+            i += 1
+            current_chain = res.chain
+        elif res.number - prev_res != 1:
             line = (
                 "{:>5d}{:>5s} {:>1s} {:>1s}  "
                 "{:>1s} {:>1s}{:>1s}{:>1s}"
