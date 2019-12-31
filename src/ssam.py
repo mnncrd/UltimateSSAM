@@ -270,7 +270,9 @@ def read_pdb_file(lines):
     organism = ""
     molecule = ""
     residues = []
+    chains = []
     res_nb = 0
+    current_chain = ""
     atoms = []
     for line in lines:
         if 'ORGANISM_SCIENTIFIC: ' in line:
@@ -284,15 +286,21 @@ def read_pdb_file(lines):
             if atom.aa_nb != res_nb:
                 if len(atoms) > 0:
                     res = Residue(atoms)
+                    if res.chain != current_chain:
+                        if len(residues) > 0:
+                            chains.append(residues)
+                            residues = []
+                        current_chain = res.chain
                     residues.append(res)
                     atoms = []
                 res_nb = atom.aa_nb
             atoms.append(atom)
     res = Residue(atoms)
     residues.append(res)
+    chains.append(residues)
     authors = ','.join(sum(authors, []))
     pdb_info = (header_pdb, organism, molecule, authors)
-    return pdb_info, residues
+    return pdb_info, chains
 
 def check_pdb_file(filename):
 
@@ -326,21 +334,24 @@ def main():
         with open(args.i, "r") as file_pdb:
             print("Reading file")
             lines = file_pdb.readlines()
-            pdb_info, residues = read_pdb_file(lines)
-            check_residues_order(residues)
+            pdb_info, chains = read_pdb_file(lines)
+            for chain in chains:
+                check_residues_order(chain)
             print("ok")
     except AssertionError as error:
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
-    #Angles
-    print("Computing angles")
-    find_angles(residues)
-    print("ok")
-    print("Assign secondary structures")
-    structures = secondary_struct(residues)
-    print("ok")
+    structures = [[], [], [], []]
+    for chain in chains:
+        print("Computing angles")
+        find_angles(chain)
+        print("ok")
+        print("Assign secondary structures")
+        structures = [x + y for x, y in zip(structures, secondary_struct(chain))]
+        print("ok")
     print("Write .dssp file")
+    residues = [res for chain in chains for res in chain]
     write_dssp_file(args.o, pdb_info, residues, structures)
     print("ok")
 
