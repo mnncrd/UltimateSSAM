@@ -166,9 +166,19 @@ def para_ladder(bridges):
     assign_ladder(alphabet, ladders)
     return ladders
 
-def final_bridges(bridges, helices):
+def final_bridges(anti_bridges, para_bridges):
 
-    """Removes bridges that are in an helix and assign a bridge"""
+    """Assign a bridge"""
+
+    bridges = anti_bridges + para_bridges
+    for bridge in bridges:
+        bridge[0].struct["B"] = True
+        bridge[1].struct["B"] = True
+    return anti_bridges, para_bridges
+
+def not_in_helix(bridges, helices):
+
+    """Removes bridges that are in an helix"""
 
     h_count = len(helices)
     b_count = len(bridges)
@@ -178,9 +188,6 @@ def final_bridges(bridges, helices):
                 if len(set(helices[i]) & set(bridges[j])) > 0:
                     bridges[j] = ()
     bridges = [bridge for bridge in bridges if len(bridge) == 2]
-    for bridge in bridges:
-        bridge[0].struct["B"] = True
-        bridge[1].struct["B"] = True
     return bridges
 
 def anti_bridge(residues):
