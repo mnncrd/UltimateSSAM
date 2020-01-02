@@ -34,21 +34,33 @@ def sheet(para_ladders, anti_ladders):
         res = []
         if len(ladder) > 1:
             for bridge in ladder:
-                res.append(bridge[0])
-                res.append(bridge[1])
+                res.extend([bridge[0], bridge[1]])
             res_in_ladders.append(res)
-    ladders = res_in_ladders
-    l_count = len(ladders)
+    res_in_sheets = list(res_in_ladders)
+    sheets = []
+    l_count = len(res_in_sheets)
     if l_count > 1:
+        l_count = len(res_in_sheets)
         for i in range(l_count-1):
-            if len(set(ladders[i]) & set(ladders[i+1])) > 0:
-                ladders[i+1] = list(set(ladders[i]) | set(ladders[i+1]))
-                ladders[i] = []
-    sheets = [sorted(lad, key=lambda res: res.number) for lad in ladders if len(lad) > 0]
-    alphabet = {i:chr(65+i) for i in range(26)}
-    for i, sht in enumerate(sheets):
-        for res in sht:
-            res.struct["SHEET"] = alphabet[i%26]
+            for j in range(i+1, l_count):
+                if len(set(res_in_sheets[i]) & set(res_in_sheets[j])) > 0:
+                    sht = [res_in_sheets[i], res_in_sheets[j]]
+                    sheets.append(sht)
+                    res_in_sheets[i] = list(set(res_in_sheets[i]) | set(res_in_sheets[j]))
+                    res_in_sheets[j] = []
+    sheets.extend([[lad] for lad in res_in_ladders if lad in res_in_sheets])
+    res_in_sheets = [sorted(lad, key=lambda res: res.number)
+                     for lad in res_in_sheets if len(lad) > 0]
+    s_count = len(sheets)
+    if s_count > 1:
+        for i in range(s_count-1):
+            for j in range(i+1, s_count):
+                if len(set(sheets[i][-1]) & set(sheets[j][-1])) > 0:
+                    sheets[i].append(sheets[j][-1])
+                    sheets[j] = [[]]
+    sheets = [[sorted(lad, key=lambda res: res.number) for lad in sht if len(sht[0]) > 0]
+              for sht in sheets]
+    sheets = [sht for sht in sheets if len(sht) > 0]
     return sheets
 
 def assign_ladder(alphabet, ladders):
