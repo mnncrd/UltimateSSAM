@@ -3,7 +3,7 @@
 This module deals with SS-bridges. For instance, it assign ss-bridges.
 """
 
-def assign_ss_bond(residues, ss_bonds):
+def assign_ss_bonds(residues, ss_bonds):
 
     """Assign SS-bonds"""
 
