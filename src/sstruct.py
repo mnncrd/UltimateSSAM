@@ -179,8 +179,6 @@ def final_bridges(bridges, helices):
                     bridges[j] = ()
     bridges = [bridge for bridge in bridges if len(bridge) == 2]
     for bridge in bridges:
-        print(bridge[0].number, bridge[1].number)
-    for bridge in bridges:
         bridge[0].struct["B"] = True
         bridge[1].struct["B"] = True
     return bridges
