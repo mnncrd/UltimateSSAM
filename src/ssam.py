@@ -30,7 +30,7 @@ class Residue():
         angles: A dictionnary of angles values for the Residue.
     """
 
-    def __init__(self, atoms, res_nb=None):
+    def __init__(self, atoms):
 
         self.atoms = {
             "CA":next((a for a in atoms if a.atom_name == "CA"), None),
@@ -39,10 +39,7 @@ class Residue():
             "O":next((a for a in atoms if a.atom_name == "O"), None),
             "N":next((a for a in atoms if a.atom_name == "N"), None)
         }
-        if res_nb is None:
-            self.number = self.atoms["CA"].aa_nb
-        else:
-            self.number = res_nb
+        self.number = self.atoms["CA"].aa_nb
         self.name = self.atoms["CA"].aa_name
         self.chain = self.atoms["CA"].aa_chain
         self.angles = {
