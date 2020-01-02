@@ -241,6 +241,8 @@ def write_dssp_file(filename, pdb_info, chains, structures):
     dsspout.out_pdb_info(file_dssp, pdb_info)
     # Protein stats
     dsspout.out_stats(file_dssp, nb_res, nb_chains, nb_ss)
+    # Accessible surface
+    dsspout.out_surface(file_dssp, 0.0)
     # Histogram
     dsspout.out_histogram(file_dssp, structures)
     # Residues
