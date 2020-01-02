@@ -15,6 +15,7 @@ import angles
 import vectors
 import dsspout
 import sstruct
+import ssbridges
 
 class Residue():
     """
@@ -235,22 +236,15 @@ def write_dssp_file(filename, pdb_info, chains, structures):
     nb_chains = len(chains)
     nb_res = len(residues)
     ss_bonds = pdb_info[-1]
-    intra = 0
-    inter = 0
-    for bond in ss_bonds:
-        if bond[0][0] == bond[1][0]:
-            intra += 1
-        else:
-            inter += 1
-    nb_ss = (intra, inter)
+    nb_ss = ssbridges.count_ss_bonds(ss_bonds)
     # PDB info
     dsspout.out_pdb_info(file_dssp, pdb_info)
     # Protein stats
-    nb_res = len(residues)
     dsspout.out_stats(file_dssp, nb_res, nb_chains, nb_ss)
     # Histogram
     dsspout.out_histogram(file_dssp, structures)
     # Residues
+    ssbridges.assign_ss_bonds(residues, ss_bonds)
     dsspout.out_residues(file_dssp, residues)
     file_dssp.close()
 
