@@ -24,6 +24,20 @@ def out_pdb_info(outfile, pdb_info):
     outfile.write("{:<127s}.\n".format(organism))
     outfile.write("AUTHOR    {:<117s}.\n".format(authors))
 
+def out_stats(outfile, nb_res, nb_chains, nb_ss):
+
+    """Write protein stats"""
+
+    tot = (
+        " TOTAL NUMBER OF RESIDUES, NUMBER OF CHAINS, NUMBER OF SS-BRIDGES"
+        "(TOTAL,INTRACHAIN,INTERCHAIN)"
+    )
+    seq_info = (
+        "{:>5d}{:>3d}{:>3d}{:>3d}{:>3d}{:<110s}"
+        ".\n".format(nb_res, nb_chains, sum(nb_ss), nb_ss[0], nb_ss[1], tot)
+    )
+    outfile.write(seq_info)
+
 def out_histogram(out_file, structures):
 
     """Write histogram"""
