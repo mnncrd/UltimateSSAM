@@ -38,6 +38,13 @@ def out_stats(outfile, nb_res, nb_chains, nb_ss):
     )
     outfile.write(seq_info)
 
+def out_surface(outfile, surface):
+
+    """Write available surface"""
+
+    txt_surface = "ACCESSIBLE SURFACE OF PROTEIN (ANGSTROM**2)"
+    outfile.write("{:>8.1f}   {:<116s}.\n".format(surface, txt_surface))
+
 def out_histogram(out_file, structures):
 
     """Write histogram"""
