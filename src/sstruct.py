@@ -24,6 +24,15 @@ def structure_to_print(residues):
         if res.struct["H"]:
             res.struct["STRC"] = "H"
 
+def assign_sheets(sheets):
+
+    """Assigns sheet name"""
+
+    alphabet = {i:chr(65+i) for i in range(26)}
+    for i, lad in enumerate(sheets):
+        for res in lad:
+            res.struct["SHEET"] = alphabet[i%26]
+
 def sheet(para_ladders, anti_ladders):
 
     """Finds sheets"""
@@ -51,6 +60,7 @@ def sheet(para_ladders, anti_ladders):
     sheets.extend([[lad] for lad in res_in_ladders if lad in res_in_sheets])
     res_in_sheets = [sorted(lad, key=lambda res: res.number)
                      for lad in res_in_sheets if len(lad) > 0]
+    assign_sheets(res_in_sheets)
     s_count = len(sheets)
     if s_count > 1:
         for i in range(s_count-1):
