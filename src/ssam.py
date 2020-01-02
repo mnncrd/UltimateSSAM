@@ -6,11 +6,11 @@ This program assigns secondary structures to a sequence.
 
     $ python ssam.py filename -o output_file
 """
-#import
+# Import libraries
 import argparse
 import math
 import sys
-#import modules
+# Import modules
 import angles
 import vectors
 import dsspout
@@ -234,11 +234,11 @@ def write_dssp_file(filename, pdb_info, residues, structures):
     """Create the output .dssp file"""
 
     file_dssp = open(filename, "w+")
-    #PDB info
+    # PDB info
     dsspout.out_pdb_info(file_dssp, pdb_info)
-    #Histogram
+    # Histogram
     dsspout.out_histogram(file_dssp, structures)
-    #Residues
+    # Residues
     dsspout.out_residues(file_dssp, residues)
     file_dssp.close()
 
@@ -322,7 +322,7 @@ def main():
 
     """Main function"""
 
-    #Get the arguments
+    # Get the arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("ssam", help="The secondary structure assignment method to use", type=str)
     parser.add_argument("-i", help="The file to assign a secondary structure to", type=str)
@@ -330,7 +330,7 @@ def main():
     parser.add_argument("-hy", "--hydrogen", action="store_true", help="add hydrogen atoms")
     args = parser.parse_args()
 
-    #Read the file
+    # Read the file
     try:
         check_pdb_file(args.i)
         with open(args.i, "r") as file_pdb:
