@@ -342,13 +342,22 @@ def main():
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
-    structures = [[], [], [], []]
+    # structures = [Helices, Anti-parallel ladders, Parallel ladders, Sheets]
+    structures = [[[], [], []], [], [], []]
     for chain in chains:
         print("Computing angles")
         find_angles(chain)
         print("ok")
         print("Assign secondary structures")
-        structures = [x + y for x, y in zip(structures, secondary_struct(chain))]
+        cur_sec_struct = secondary_struct(chain)
+        # Helices
+        structures[0] = [x + y for x, y in zip(structures[0], cur_sec_struct[0])]
+        # Anti-parallel ladders
+        structures[1].extend(cur_sec_struct[1])
+        # Parallel ladders
+        structures[2].extend(cur_sec_struct[2])
+        # Sheets
+        structures[3].extend(cur_sec_struct[3])
         print("ok")
     print("Write .dssp file")
     residues = [res for chain in chains for res in chain]
