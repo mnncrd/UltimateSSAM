@@ -236,6 +236,8 @@ def write_dssp_file(filename, pdb_info, residues, structures):
     file_dssp = open(filename, "w+")
     #PDB info
     dsspout.out_pdb_info(file_dssp, pdb_info)
+    #Histogram
+    dsspout.out_histogram(file_dssp, structures)
     #Residues
     dsspout.out_residues(file_dssp, residues)
     file_dssp.close()
