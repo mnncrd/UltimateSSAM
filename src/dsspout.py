@@ -28,6 +28,38 @@ def out_pdb_info(outfile, pdb_info):
     outfile.write("{:<127s}.\n".format(organism))
     outfile.write("AUTHOR    {:<117s}.\n".format(authors))
 
+def out_histogram(out_file, structures):
+
+    """Write histogram"""
+
+    helices, anti_ladders, para_ladders, sheets = structures
+    #Header
+    for i in range(1, 31):
+        out_file.write("{:>3d}".format(i))
+    out_file.write("{:>4s}{:<33s}.\n".format("", " *** HISTOGRAMS OF *** "))
+    #Residues per alpha helix
+    alpha_helices = helices[1]
+    res_alpha_helices = [len(helix) for helix in alpha_helices]
+    for i in range(1, 31):
+        out_file.write("{:>3d}".format(res_alpha_helices.count(i)))
+    out_file.write("{:>4s}{:<33s}.\n".format("", "RESIDUES PER ALPHA HELIX"))
+    #Parallel bridges per ladder
+    bridges_para_ladders = [len(ladder) for ladder in para_ladders]
+    for i in range(1, 31):
+        out_file.write("{:>3d}".format(bridges_para_ladders.count(i)))
+    out_file.write("{:>4s}{:<33s}.\n".format("", "PARALLEL BRIDGES PER LADDER"))
+    #Antiparallel bridges per ladder
+    bridges_anti_ladders = [len(ladder) for ladder in anti_ladders]
+    for i in range(1, 31):
+        out_file.write("{:>3d}".format(bridges_anti_ladders.count(i)))
+    out_file.write("{:>4s}{:<33s}.\n".format("", "ANTIPARALLEL BRIDGES PER LADDER"))
+    #Ladders per sheet
+    ladder_sheets = [len(sheet) for sheet in sheets]
+    for i in range(1, 31):
+        out_file.write("{:>3d}".format(ladder_sheets.count(i)))
+    out_file.write("{:>4s}{:<33s}.\n".format("", "LADDERS PER SHEET"))
+
+
 def out_residues(out_file, residues):
 
     """Write information about each residue"""
