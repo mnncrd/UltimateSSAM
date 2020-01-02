@@ -87,12 +87,16 @@ def assign_ladder(alphabet, ladders):
         for bridge in lad:
             if res_in_lad_1 == 0:
                 bridge[0].struct["LAD1"] = alphabet[i%26]
+                bridge[0].struct["BP1"] = bridge[1].number
             else:
                 bridge[0].struct["LAD2"] = alphabet[i%26]
+                bridge[0].struct["BP2"] = bridge[1].number
             if res_in_lad_2 == 0:
                 bridge[1].struct["LAD1"] = alphabet[i%26]
+                bridge[1].struct["BP1"] = bridge[0].number
             else:
                 bridge[1].struct["LAD2"] = alphabet[i%26]
+                bridge[1].struct["BP2"] = bridge[0].number
 
 def anti_ladder(bridges):
 
@@ -174,6 +178,8 @@ def final_bridges(bridges, helices):
                 if len(set(helices[i]) & set(bridges[j])) > 0:
                     bridges[j] = ()
     bridges = [bridge for bridge in bridges if len(bridge) == 2]
+    for bridge in bridges:
+        print(bridge[0].number, bridge[1].number)
     for bridge in bridges:
         bridge[0].struct["B"] = True
         bridge[1].struct["B"] = True
