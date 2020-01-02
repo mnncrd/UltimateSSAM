@@ -277,9 +277,9 @@ def read_pdb_file(lines):
     current_chain = ""
     atoms = []
     for line in lines:
-        if 'ORGANISM_SCIENTIFIC: ' in line:
+        if '2 ORGANISM_SCIENTIFIC: ' in line:
             organism += line.strip()
-        elif 'MOLECULE: ' in line:
+        elif '2 MOLECULE: ' in line:
             molecule += line.strip()
         elif line[0:6] == 'AUTHOR':
             authors.append(line[10:].strip().split(","))
