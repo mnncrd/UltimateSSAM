@@ -11,7 +11,7 @@ def out_pdb_info(outfile, pdb_info):
     """Write pdb info"""
 
     today = date.today()
-    header_pdb, organism, molecule, authors = pdb_info
+    header_pdb, organism, molecule, authors, ss_bonds = pdb_info
     header_dssp = (
         "==== Secondary Structure Definition by the program DSSP, "
         "version by M. Curaudeau/2020-01-02 ==== DATE="

@@ -229,13 +229,28 @@ def secondary_struct(residues):
     structures = (helices, anti_ladders, para_ladders, sheets)
     return structures
 
-def write_dssp_file(filename, pdb_info, residues, structures):
+def write_dssp_file(filename, pdb_info, chains, structures):
 
     """Create the output .dssp file"""
 
     file_dssp = open(filename, "w+")
+    residues = [res for chain in chains for res in chain]
+    nb_chains = len(chains)
+    nb_res = len(residues)
+    ss_bonds = pdb_info[-1]
+    intra = 0
+    inter = 0
+    for bond in ss_bonds:
+        if bond[0][0] == bond[1][0]:
+            intra += 1
+        else:
+            inter += 1
+    nb_ss = (intra, inter)
     # PDB info
     dsspout.out_pdb_info(file_dssp, pdb_info)
+    # Protein stats
+    nb_res = len(residues)
+    dsspout.out_stats(file_dssp, nb_res, nb_chains, nb_ss)
     # Histogram
     dsspout.out_histogram(file_dssp, structures)
     # Residues
@@ -271,6 +286,7 @@ def read_pdb_file(lines):
     authors = []
     organism = ""
     molecule = ""
+    ss_bonds = []
     residues = []
     chains = []
     res_nb = 0
@@ -283,6 +299,8 @@ def read_pdb_file(lines):
             molecule += line.strip()
         elif line[0:6] == 'AUTHOR':
             authors.append(line[10:].strip().split(","))
+        elif line[0:6] == 'SSBOND':
+            ss_bonds.append([[line[15], float(line[16:21])], [line[29], float(line[30:35])]])
         elif line[0:4] == 'ATOM':
             atom = Atom(line)
             if atom.aa_nb != res_nb:
@@ -301,7 +319,7 @@ def read_pdb_file(lines):
     residues.append(res)
     chains.append(residues)
     authors = ','.join(sum(authors, []))
-    pdb_info = (header_pdb, organism, molecule, authors)
+    pdb_info = (header_pdb, organism, molecule, authors, ss_bonds)
     return pdb_info, chains
 
 def check_pdb_file(filename):
@@ -362,8 +380,7 @@ def main():
         structures[3].extend(cur_sec_struct[3])
         print("ok")
     print("Write .dssp file")
-    residues = [res for chain in chains for res in chain]
-    write_dssp_file(args.o, pdb_info, residues, structures)
+    write_dssp_file(args.o, pdb_info, chains, structures)
     print("ok")
 
 if __name__ == '__main__':
