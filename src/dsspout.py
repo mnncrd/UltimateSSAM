@@ -14,15 +14,11 @@ def out_pdb_info(outfile, pdb_info):
     header_pdb, organism, molecule, authors = pdb_info
     header_dssp = (
         "==== Secondary Structure Definition by the program DSSP, "
-        "CMBI version by M.L. Hekkelman/2010-10-21 ==== DATE="
-        "{:<18s}.\n".format(today.strftime("%Y-%m-%d"))
+        "version by M. Curaudeau/2020-01-02 ==== DATE="
     )
-    article_ref = (
-        "REFERENCE W. KABSCH AND C.SANDER, BIOPOLYMERS 22 (1983) 2577-2637     "
-        "                                                         .\n"
-    )
-    outfile.write(header_dssp)
-    outfile.write(article_ref)
+    article_ref = ("REFERENCE W. KABSCH AND C.SANDER, BIOPOLYMERS 22 (1983) 2577-2637")
+    outfile.write("{:<s}{:<25s}.\n".format(header_dssp, today.strftime("%Y-%m-%d")))
+    outfile.write("{:<127s}.\n".format(article_ref))
     outfile.write("{:<127s}.\n".format(header_pdb))
     outfile.write("{:<127s}.\n".format(molecule))
     outfile.write("{:<127s}.\n".format(organism))
