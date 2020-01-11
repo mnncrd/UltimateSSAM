@@ -36,3 +36,24 @@ def assign_hbonds(residues):
         min_hb = min(all_hb, key=all_hb.get)
         residues[i].bonds["N2"] = min_hb
         residues[i].bonds["VN2"] = all_hb[min_hb]
+
+
+def nb_hbonds(para_hbonds, anti_hbonds, residues):
+
+    """"""
+    
+    nb_para_hbonds = len(para_hbonds)
+    nb_anti_hbonds = len(anti_hbonds)
+    h_bond_type = []
+    for res in residues:
+        if res.bonds["VO1"] < -0.5:
+            h_bond_type.append(res.bonds["O1"])
+        if res.bonds["VO2"] < -0.5:
+            h_bond_type.append(res.bonds["O2"])
+    nb_h_bond_type = [0]*11
+    for i in range(11):
+        nb_h_bond_type[i] = h_bond_type.count(i-5)
+    nb_tot = len(h_bond_type)
+    h_bonds = [nb_tot, nb_para_hbonds, nb_anti_hbonds]
+    h_bonds.extend(nb_h_bond_type)
+    return h_bonds

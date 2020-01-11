@@ -214,7 +214,7 @@ class Atom():
 
 def secondary_struct(residues):
 
-    """Assigns secondary structures"""
+    """Assigns secondary structures and find h-bonds in secondary structures"""
 
     three_turns = sstruct.n_turn(residues, 3)
     four_turns = sstruct.n_turn(residues, 4)
@@ -222,9 +222,10 @@ def secondary_struct(residues):
     g_helices = sstruct.helix(residues, three_turns, 3)
     h_helices = sstruct.helix(residues, four_turns, 4)
     i_helices = sstruct.helix(residues, five_turns, 5)
-    para_bridges = sstruct.para_bridge(residues)
+    para_bridges, para_hbonds = sstruct.para_bridge(residues)
+    anti_bridges, anti_hbonds = sstruct.anti_bridge(residues)
+    h_bonds = hbonds.nb_hbonds(para_hbonds, anti_hbonds, residues)
     para_bridges = sstruct.not_in_helix(para_bridges, h_helices)
-    anti_bridges = sstruct.anti_bridge(residues)
     anti_bridges = sstruct.not_in_helix(anti_bridges, h_helices)
     anti_bridges, para_bridges = sstruct.final_bridges(anti_bridges, para_bridges)
     para_ladders = sstruct.para_ladder(para_bridges)
@@ -233,9 +234,9 @@ def secondary_struct(residues):
     helices = sstruct.final_helices(g_helices, h_helices, i_helices, anti_bridges, para_bridges)
     sstruct.structure_to_print(residues)
     structures = (helices, anti_ladders, para_ladders, sheets)
-    return structures
+    return structures, h_bonds
 
-def write_dssp_file(filename, pdb_info, chains, structures):
+def write_dssp_file(filename, pdb_info, chains, structures, h_bonds):
 
     """Create the output .dssp file"""
 
@@ -251,6 +252,8 @@ def write_dssp_file(filename, pdb_info, chains, structures):
     dsspout.out_stats(file_dssp, nb_res, nb_chains, nb_ss)
     # Accessible surface
     dsspout.out_surface(file_dssp, 0.0)
+    # Hydrogen bonds
+    dsspout.out_hbonds(file_dssp, h_bonds, nb_res)
     # Histogram
     dsspout.out_histogram(file_dssp, structures)
     # Residues
@@ -365,6 +368,7 @@ def main():
         sys.exit("{} does not exist".format(args.i))
     # structures = [Helices, Anti-parallel ladders, Parallel ladders, Sheets]
     structures = [[[], [], []], [], [], []]
+    h_bonds = [0]*14
     for chain in chains:
         print("Computing angles")
         find_angles(chain)
@@ -373,7 +377,7 @@ def main():
         hbonds.assign_hbonds(chain)
         print("ok")
         print("Assign secondary structures")
-        cur_sec_struct = secondary_struct(chain)
+        cur_sec_struct, cur_h_bonds = secondary_struct(chain)
         # Helices
         structures[0] = [x + y for x, y in zip(structures[0], cur_sec_struct[0])]
         # Anti-parallel ladders
@@ -382,9 +386,11 @@ def main():
         structures[2].extend(cur_sec_struct[2])
         # Sheets
         structures[3].extend(cur_sec_struct[3])
+        # Hydrogen bonds
+        h_bonds = [x + y for x, y in zip(h_bonds, cur_h_bonds)]
         print("ok")
     print("Write .dssp file")
-    write_dssp_file(args.o, pdb_info, chains, structures)
+    write_dssp_file(args.o, pdb_info, chains, structures, h_bonds)
     print("ok")
 
 if __name__ == '__main__':
