@@ -29,9 +29,10 @@ def assign_sheets(sheets):
     """Assigns sheet name"""
 
     alphabet = {i:chr(65+i) for i in range(26)}
-    for i, lad in enumerate(sheets):
-        for res in lad:
-            res.struct["SHEET"] = alphabet[i%26]
+    for i, sht in enumerate(sheets):
+        for lad in sht:
+            for res in lad:
+                res.struct["SHEET"] = alphabet[i%26]
 
 def sheet(para_ladders, anti_ladders):
 
@@ -41,7 +42,7 @@ def sheet(para_ladders, anti_ladders):
     res_in_ladders = []
     for ladder in ladders:
         res = []
-        if len(ladder) > 1:
+        if len(ladder) > 0:
             for bridge in ladder:
                 res.extend([bridge[0], bridge[1]])
             res_in_ladders.append(res)
@@ -60,7 +61,6 @@ def sheet(para_ladders, anti_ladders):
     sheets.extend([[lad] for lad in res_in_ladders if lad in res_in_sheets])
     res_in_sheets = [sorted(lad, key=lambda res: res.number)
                      for lad in res_in_sheets if len(lad) > 0]
-    assign_sheets(res_in_sheets)
     s_count = len(sheets)
     if s_count > 1:
         for i in range(s_count-1):
@@ -71,6 +71,7 @@ def sheet(para_ladders, anti_ladders):
     sheets = [[sorted(lad, key=lambda res: res.number) for lad in sht if len(sht[0]) > 0]
               for sht in sheets]
     sheets = [sht for sht in sheets if len(sht) > 0]
+    assign_sheets(sheets)
     return sheets
 
 def assign_ladder(alphabet, ladders):
