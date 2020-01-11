@@ -76,7 +76,6 @@ def out_histogram(out_file, structures):
         out_file.write("{:>3d}".format(ladder_sheets.count(i)))
     out_file.write("    {:<33s}.\n".format("LADDERS PER SHEET"))
 
-
 def out_residues(out_file, residues):
 
     """Write information about each residue"""
@@ -124,7 +123,8 @@ def out_residues(out_file, residues):
             "{:>1s} {:>1s}{:>1s}{:>1s}"
             "{:>1s}{:>1s}"
             "{:1s}{:1s}{:4d}{:4d}{:1s}"
-            "{:51s}"
+            " {:3d} "
+            "{:6d},{:4.1f}{:6d},{:4.1f}{:6d},{:4.1f}{:6d},{:4.1f}  "
             "{:6.3f}{:6.1f}{:6.1f}{:6.1f}{:6.1f}"
             "{:7.1f}{:7.1f}{:7.1f}"
             "\n".format(i, res.number, res.chain, res.name,
@@ -133,7 +133,11 @@ def out_residues(out_file, residues):
                         res.struct["LAD1"], res.struct["LAD2"],
                         res.struct["BP1"], res.struct["BP2"],
                         res.struct["SHEET"],
-                        "",
+                        0,
+                        res.bonds["N1"],res.bonds["VN1"],
+                        res.bonds["O1"],res.bonds["VO1"],
+                        res.bonds["N2"],res.bonds["VN2"],
+                        res.bonds["O2"],res.bonds["VO2"],
                         res.angles["TCO"], res.angles["KAPPA"], res.angles["ALPHA"],
                         res.angles["PHI"], res.angles["PSI"],
                         res.atoms["CA"].x_coord, res.atoms["CA"].y_coord, res.atoms["CA"].z_coord
