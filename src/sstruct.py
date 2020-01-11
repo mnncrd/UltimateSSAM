@@ -196,6 +196,7 @@ def anti_bridge(residues):
     """Finds antiparallel bridges"""
 
     abridges = []
+    ahbonds = []
     indices = [residue.number for residue in residues]
     nb_res = len(residues)
     for i in range(1, nb_res-4):
@@ -207,22 +208,31 @@ def anti_bridge(residues):
                     energy_3 = residues[i-1].compute_energy(residues[j+1])
                     energy_4 = residues[j-1].compute_energy(residues[i+1])
                     if energy_1 < -0.5 and energy_2 < -0.5:
+                        hbond1 = (residues[i].number, residues[j].number)
+                        hbond2 = (residues[j].number, residues[i].number)
                         bridge = (residues[i], residues[j])
                         residues[i].struct["B"] = True
                         residues[j].struct["B"] = True
+                        ahbonds.append(hbond1)
+                        ahbonds.append(hbond2)
                         abridges.append(bridge)
                     elif energy_3 < -0.5 and energy_4 < -0.5:
+                        hbond1 = (residues[i-1].number, residues[j+1].number)
+                        hbond2 = (residues[j-1].number, residues[i+1].number)
                         bridge = (residues[i], residues[j])
                         residues[i].struct["B"] = True
                         residues[j].struct["B"] = True
+                        ahbonds.append(hbond1)
+                        ahbonds.append(hbond2)
                         abridges.append(bridge)
-    return abridges
+    return abridges, list(set(ahbonds))
 
 def para_bridge(residues):
 
     """Finds parallel bridges"""
 
     pbridges = []
+    phbonds = []
     indices = [residue.number for residue in residues]
     nb_res = len(residues)
     for i in range(1, nb_res-4):
@@ -234,16 +244,24 @@ def para_bridge(residues):
                     energy_3 = residues[j-1].compute_energy(residues[i])
                     energy_4 = residues[i].compute_energy(residues[j+1])
                     if energy_1 < -0.5 and energy_2 < -0.5:
+                        hbond1 = (residues[i-1].number, residues[j].number)
+                        hbond2 = (residues[j].number, residues[i+1].number)
                         bridge = (residues[i], residues[j])
                         residues[i].struct["B"] = True
                         residues[j].struct["B"] = True
+                        phbonds.append(hbond1)
+                        phbonds.append(hbond2)
                         pbridges.append(bridge)
                     elif energy_3 < -0.5 and energy_4 < -0.5:
+                        hbond1 = (residues[j-1].number, residues[i].number)
+                        hbond2 = (residues[i].number, residues[j+1].number)
                         bridge = (residues[i], residues[j])
                         residues[i].struct["B"] = True
                         residues[j].struct["B"] = True
+                        phbonds.append(hbond1)
+                        phbonds.append(hbond2)
                         pbridges.append(bridge)
-    return pbridges
+    return pbridges, list(set(phbonds))
 
 def sort_helices(helices, min_len):
 
