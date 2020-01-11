@@ -76,6 +76,28 @@ def out_histogram(out_file, structures):
         out_file.write("{:>3d}".format(ladder_sheets.count(i)))
     out_file.write("    {:<33s}.\n".format("LADDERS PER SHEET"))
 
+def out_hbonds(out_file, h_bonds, nb_res):
+
+    """Write hydrogen bonds stats"""
+
+    txt_nb = "TOTAL NUMBER OF HYDROGEN BONDS"
+    txt_100_nb = ", SAME NUMBER PER 100 RESIDUES"
+    #all hydrogen bonds
+    out_file.write("{:5d}{:5.1f}   {:>s}".format(h_bonds[0], h_bonds[0]*100/nb_res, txt_nb))
+    out_file.write(" OF TYPE O(I)-->H-N(J)  {:<60s}.\n".format(txt_100_nb))
+    #hydrogen bonds in bridges
+    out_file.write("{:5d}{:5.1f}   {:>s}".format(h_bonds[1], h_bonds[1]*100/nb_res, txt_nb))
+    out_file.write(" IN     PARALLEL BRIDGES{:<60s}.\n".format(txt_100_nb))
+    out_file.write("{:5d}{:5.1f}   {:>s}".format(h_bonds[2], h_bonds[2]*100/nb_res, txt_nb))
+    out_file.write(" IN ANTIPARALLEL BRIDGES{:<60s}.\n".format(txt_100_nb))
+    #hygrogen bonds -5 to +5
+    for i, bond in enumerate(h_bonds[3:]):
+        out_file.write("{:5d}{:5.1f}   {:>s}".format(bond, bond*100/nb_res, txt_nb))
+        if i-5 < 0:
+            out_file.write(" OF TYPE O(I)-->H-N(I{:2d}){:<60s}.\n".format(i-5, txt_100_nb))
+        else:
+            out_file.write(" OF TYPE O(I)-->H-N(I+{:1d}){:<60s}.\n".format(i-5, txt_100_nb))
+
 def out_residues(out_file, residues):
 
     """Write information about each residue"""
