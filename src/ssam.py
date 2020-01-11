@@ -16,6 +16,7 @@ import vectors
 import dsspout
 import sstruct
 import ssbridges
+import hbonds
 
 class Residue():
     """
@@ -59,6 +60,12 @@ class Residue():
             "SHEET": "",
             "LAD1":"", "LAD2":"",
             "BP1":0, "BP2":0
+        }
+        self.bonds = {
+            "O1": 0, "VO1": 0,
+            "O2": 0, "VO2": 0,
+            "N1": 0, "VN1": 0,
+            "N2": 0, "VN2": 0
         }
 
     def compute_energy(self, oth):
@@ -361,6 +368,9 @@ def main():
     for chain in chains:
         print("Computing angles")
         find_angles(chain)
+        print("ok")
+        print("Assign hydrogen bonds")
+        hbonds.assign_hbonds(chain)
         print("ok")
         print("Assign secondary structures")
         cur_sec_struct = secondary_struct(chain)
