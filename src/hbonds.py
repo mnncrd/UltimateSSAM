@@ -5,7 +5,7 @@ This module finds hydrogen bonds in the protein.
 
 def assign_hbonds(residues):
 
-    """Assign h_bonds to residues"""
+    """Assigns h_bonds to residues"""
 
     nb_res = len(residues)
     for i in range(nb_res):
@@ -40,8 +40,8 @@ def assign_hbonds(residues):
 
 def nb_hbonds(para_hbonds, anti_hbonds, residues):
 
-    """"""
-    
+    """Finds the number of hydrogen bonda"""
+
     nb_para_hbonds = len(para_hbonds)
     nb_anti_hbonds = len(anti_hbonds)
     h_bond_type = []

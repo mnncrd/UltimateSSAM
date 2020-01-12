@@ -5,6 +5,8 @@ This module deals with SS-bridges. For instance, it assign ss-bridges.
 
 def count_ss_bonds(ss_bonds):
 
+    """Counts the number of intra and inter-SS-bonds"""
+
     intra = 0
     inter = 0
     for bond in ss_bonds:
@@ -13,7 +15,7 @@ def count_ss_bonds(ss_bonds):
         else:
             inter += 1
     nb_ss = (intra, inter)
-    return(nb_ss)
+    return nb_ss
 
 def assign_ss_bonds(residues, ss_bonds):
 
