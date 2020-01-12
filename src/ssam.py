@@ -85,6 +85,18 @@ class Residue():
             energy = 0
         return energy
 
+    def add_h(self, oth):
+
+        """Adds hydrogen atoms"""
+
+        v_n = self.atoms["N"].pos_vector()
+        v_co = oth.atoms["C"].vector(oth.atoms["O"])
+        dist_co = oth.atoms["C"].compute_distance(oth.atoms["O"])
+        v_h = vectors.compute_frac_vect(v_co, dist_co)
+        v_nh = vectors.compute_sum_vect(v_n, v_h)
+        h_atom = ["H", self.name, self.chain, self.number, v_nh]
+        self.atoms["H"] = Atom(h_atom, hydrogen=True)
+
     def compute_tco(self, oth):
 
         """Computes the tco"""
@@ -172,15 +184,25 @@ class Atom():
         "TRP":"W", "TYR":"Y"
     }
 
-    def __init__(self, line):
+    def __init__(self, line, hydrogen=False):
 
-        self.atom_name = line[12:16].strip()
-        self.aa_name = self.code[line[17:20]]
-        self.aa_chain = line[21:22]
-        self.aa_nb = int(line[22:26])
-        self.x_coord = float(line[30:38])
-        self.y_coord = float(line[38:46])
-        self.z_coord = float(line[46:54])
+        if hydrogen:
+            name, aa_name, chain, number, h_coord = line
+            self.atom_name = name
+            self.aa_name = aa_name
+            self.aa_chain = chain
+            self.aa_nb = number
+            self.x_coord = h_coord[0]
+            self.y_coord = h_coord[1]
+            self.z_coord = h_coord[2]
+        else:
+            self.atom_name = line[12:16].strip()
+            self.aa_name = self.code[line[17:20]]
+            self.aa_chain = line[21:22]
+            self.aa_nb = int(line[22:26])
+            self.x_coord = float(line[30:38])
+            self.y_coord = float(line[38:46])
+            self.z_coord = float(line[46:54])
 
     def compute_distance(self, oth):
 
@@ -366,6 +388,20 @@ def main():
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
+    
+    # Add hydrogen atoms if specified
+    if args.hydrogen:
+        for chain in chains:
+            indices = [res.number for res in chain]
+            nb_res = len(chain)
+            for i in range(nb_res):
+                if chain[i].name != "P":
+                    if chain[i].number-1 in indices:
+                        chain[i].add_h(chain[i-1])
+                    else:
+                        chain[i].atoms["H"] = None
+                else:
+                    chain[i].atoms["H"] = None
 
     # DSSP
     # structures = [Helices, Anti-parallel ladders, Parallel ladders, Sheets]
