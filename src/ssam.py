@@ -37,7 +37,7 @@ class Residue():
         self.atoms = {
             "CA":next((a for a in atoms if a.atom_name == "CA"), None),
             "C":next((a for a in atoms if a.atom_name == "C"), None),
-            "H":next((a for a in atoms if a.atom_name == "H"), None),
+            "H":next((a for a in atoms if a.atom_name == "H" or a.atom_name == "H1"), None),
             "O":next((a for a in atoms if a.atom_name == "O"), None),
             "N":next((a for a in atoms if a.atom_name == "N"), None)
         }
