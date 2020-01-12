@@ -184,7 +184,7 @@ class Atom():
         "TRP":"W", "TYR":"Y"
     }
 
-    def __init__(self, line, pdb, hydrogen=False):
+    def __init__(self, line, pdb=True, hydrogen=False):
 
         if hydrogen:
             name, aa_name, chain, number, h_coord = line
@@ -317,7 +317,13 @@ def read_protein_file(lines, pdb):
 
     """Stores info"""
 
-    protein_info = {"header_pdb":"", "organism":"", "molecule":"", "authors":[], "ss_bonds":[]}
+    protein_info = {
+        "header_pdb":"",
+        "organism":"",
+        "molecule":"",
+        "authors":[],
+        "ss_bonds":[]
+    }
     protein_info["header_pdb"] = lines[0].strip()
     residues = []
     chains = []
@@ -332,7 +338,8 @@ def read_protein_file(lines, pdb):
         elif line[0:6] == 'AUTHOR':
             protein_info["authors"].append(line[10:].strip().split(","))
         elif line[0:6] == 'SSBOND':
-            protein_info["ss_bonds"].append([[line[15], float(line[16:21])], [line[29], float(line[30:35])]])
+            ssbond = [[line[15], float(line[16:21])], [line[29], float(line[30:35])]]
+            protein_info["ss_bonds"].append(ssbond)
         elif line[0:4] == 'ATOM':
             atom = Atom(line, pdb)
             if atom.aa_nb != res_nb:
@@ -405,7 +412,7 @@ def main():
     # Add hydrogen atoms if specified
     if args.hydrogen:
         if args.verbose:
-                print("Adding H")
+            print("Adding H")
         for chain in chains:
             indices = [res.number for res in chain]
             nb_res = len(chain)
