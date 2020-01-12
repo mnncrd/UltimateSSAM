@@ -22,7 +22,7 @@ def assign_hbonds(residues):
         min_hb = min(all_hb, key=all_hb.get)
         residues[i].bonds["O2"] = min_hb
         residues[i].bonds["VO2"] = all_hb[min_hb]
-    for i in range(nb_res):
+    for i in range(1, nb_res):
         all_hb = {}
         for j in range(nb_res):
             if i != j:
