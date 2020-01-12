@@ -43,3 +43,10 @@ def compute_diff_vect(v_i, v_j):
 
     v_ij = [i-j for i, j in zip(v_i, v_j)]
     return v_ij
+
+def compute_sum_vect(v_i, v_j):
+
+    """Computes the sum between two vectors"""
+
+    v_ij = [i+j for i, j in zip(v_i, v_j)]
+    return v_ij
