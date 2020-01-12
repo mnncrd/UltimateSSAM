@@ -37,7 +37,7 @@ class Residue():
         self.atoms = {
             "CA":next((a for a in atoms if a.atom_name == "CA"), None),
             "C":next((a for a in atoms if a.atom_name == "C"), None),
-            "H":next((a for a in atoms if a.atom_name == "H" or a.atom_name == "H1"), None),
+            "H":next((a for a in atoms if a.atom_name == "H"), None),
             "O":next((a for a in atoms if a.atom_name == "O"), None),
             "N":next((a for a in atoms if a.atom_name == "N"), None)
         }
@@ -72,7 +72,7 @@ class Residue():
 
         """Computes the energy between two H-bonding groups"""
 
-        if self.atoms["H"] is not None and oth.atoms["H"] is not None:
+        if oth.atoms["H"] is not None:
             q_1 = 0.42
             q_2 = 0.2
             dim_f = 332
