@@ -11,7 +11,6 @@ def out_protein_info(outfile, protein_info):
     """Write pdb info"""
 
     today = date.today()
-    header_pdb, organism, molecule, authors, ss_bonds = protein_info
     header_dssp = (
         "==== Secondary Structure Definition by the program DSSP, "
         "version by M. Curaudeau/2020-01-02 ==== DATE="
@@ -19,10 +18,10 @@ def out_protein_info(outfile, protein_info):
     article_ref = ("REFERENCE W. KABSCH AND C.SANDER, BIOPOLYMERS 22 (1983) 2577-2637")
     outfile.write("{:<s}{:<25s}.\n".format(header_dssp, today.strftime("%Y-%m-%d")))
     outfile.write("{:<127s}.\n".format(article_ref))
-    outfile.write("{:<127s}.\n".format(header_pdb))
-    outfile.write("{:<127s}.\n".format(molecule))
-    outfile.write("{:<127s}.\n".format(organism))
-    outfile.write("AUTHOR    {:<117s}.\n".format(authors))
+    outfile.write("{:<127s}.\n".format(protein_info["header_pdb"]))
+    outfile.write("{:<127s}.\n".format(protein_info["molecule"]))
+    outfile.write("{:<127s}.\n".format(protein_info["organism"]))
+    outfile.write("AUTHOR    {:<117s}.\n".format(protein_info["authors"]))
 
 def out_stats(outfile, nb_res, nb_chains, nb_ss):
 

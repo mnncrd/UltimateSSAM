@@ -276,8 +276,7 @@ def write_dssp_file(filename, protein_info, chains, structures, h_bonds):
     residues = [res for chain in chains for res in chain]
     nb_chains = len(chains)
     nb_res = len(residues)
-    ss_bonds = protein_info[-1]
-    nb_ss = ssbridges.count_ss_bonds(ss_bonds)
+    nb_ss = ssbridges.count_ss_bonds(protein_info["ss_bonds"])
     # PDB info
     dsspout.out_protein_info(file_dssp, protein_info)
     # Protein stats
@@ -289,7 +288,7 @@ def write_dssp_file(filename, protein_info, chains, structures, h_bonds):
     # Histogram
     dsspout.out_histogram(file_dssp, structures)
     # Residues
-    ssbridges.assign_ss_bonds(residues, ss_bonds)
+    ssbridges.assign_ss_bonds(residues, protein_info["ss_bonds"])
     dsspout.out_residues(file_dssp, residues)
     file_dssp.close()
 
@@ -318,11 +317,8 @@ def read_protein_file(lines, pdb):
 
     """Stores info"""
 
-    header_pdb = lines[0].strip()
-    authors = []
-    organism = ""
-    molecule = ""
-    ss_bonds = []
+    protein_info = {"header_pdb":"", "organism":"", "molecule":"", "authors":[], "ss_bonds":[]}
+    protein_info["header_pdb"] = lines[0].strip()
     residues = []
     chains = []
     res_nb = 0
@@ -330,13 +326,13 @@ def read_protein_file(lines, pdb):
     atoms = []
     for line in lines:
         if '2 ORGANISM_SCIENTIFIC: ' in line:
-            organism += line.strip()
+            protein_info["organism"] += line.strip()
         elif '2 MOLECULE: ' in line:
-            molecule += line.strip()
+            protein_info["molecule"] += line.strip()
         elif line[0:6] == 'AUTHOR':
-            authors.append(line[10:].strip().split(","))
+            protein_info["authors"].append(line[10:].strip().split(","))
         elif line[0:6] == 'SSBOND':
-            ss_bonds.append([[line[15], float(line[16:21])], [line[29], float(line[30:35])]])
+            protein_info["ss_bonds"].append([[line[15], float(line[16:21])], [line[29], float(line[30:35])]])
         elif line[0:4] == 'ATOM':
             atom = Atom(line, pdb)
             if atom.aa_nb != res_nb:
@@ -354,8 +350,7 @@ def read_protein_file(lines, pdb):
     res = Residue(atoms)
     residues.append(res)
     chains.append(residues)
-    authors = ','.join(sum(authors, []))
-    protein_info = (header_pdb, organism, molecule, authors, ss_bonds)
+    protein_info["authors"] = ','.join(sum(protein_info["authors"], []))
     return protein_info, chains
 
 def check_file_extension(filename):
