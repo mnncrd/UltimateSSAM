@@ -184,7 +184,7 @@ class Atom():
         "TRP":"W", "TYR":"Y"
     }
 
-    def __init__(self, line, hydrogen=False):
+    def __init__(self, line, pdb, hydrogen=False):
 
         if hydrogen:
             name, aa_name, chain, number, h_coord = line
@@ -196,13 +196,23 @@ class Atom():
             self.y_coord = h_coord[1]
             self.z_coord = h_coord[2]
         else:
-            self.atom_name = line[12:16].strip()
-            self.aa_name = self.code[line[17:20]]
-            self.aa_chain = line[21:22]
-            self.aa_nb = int(line[22:26])
-            self.x_coord = float(line[30:38])
-            self.y_coord = float(line[38:46])
-            self.z_coord = float(line[46:54])
+            if pdb:
+                self.atom_name = line[12:16].strip()
+                self.aa_name = self.code[line[17:20]]
+                self.aa_chain = line[21:22]
+                self.aa_nb = int(line[22:26])
+                self.x_coord = float(line[30:38])
+                self.y_coord = float(line[38:46])
+                self.z_coord = float(line[46:54])
+            else:
+                line = line.split()
+                self.atom_name = line[3]
+                self.aa_name = self.code[line[5]]
+                self.aa_chain = line[6]
+                self.aa_nb = int(line[8])
+                self.x_coord = float(line[10])
+                self.y_coord = float(line[11])
+                self.z_coord = float(line[12])
 
     def compute_distance(self, oth):
 
@@ -258,7 +268,7 @@ def secondary_struct(residues):
     structures = (helices, anti_ladders, para_ladders, sheets)
     return structures, h_bonds
 
-def write_dssp_file(filename, pdb_info, chains, structures, h_bonds):
+def write_dssp_file(filename, protein_info, chains, structures, h_bonds):
 
     """Create the output .dssp file"""
 
@@ -266,10 +276,10 @@ def write_dssp_file(filename, pdb_info, chains, structures, h_bonds):
     residues = [res for chain in chains for res in chain]
     nb_chains = len(chains)
     nb_res = len(residues)
-    ss_bonds = pdb_info[-1]
+    ss_bonds = protein_info[-1]
     nb_ss = ssbridges.count_ss_bonds(ss_bonds)
     # PDB info
-    dsspout.out_pdb_info(file_dssp, pdb_info)
+    dsspout.out_protein_info(file_dssp, protein_info)
     # Protein stats
     dsspout.out_stats(file_dssp, nb_res, nb_chains, nb_ss)
     # Accessible surface
@@ -304,7 +314,7 @@ def find_angles(residues):
         if residues[i].number+1 in indices:
             residues[i].compute_psi(residues[i+1])
 
-def read_pdb_file(lines):
+def read_protein_file(lines, pdb):
 
     """Stores info"""
 
@@ -328,7 +338,7 @@ def read_pdb_file(lines):
         elif line[0:6] == 'SSBOND':
             ss_bonds.append([[line[15], float(line[16:21])], [line[29], float(line[30:35])]])
         elif line[0:4] == 'ATOM':
-            atom = Atom(line)
+            atom = Atom(line, pdb)
             if atom.aa_nb != res_nb:
                 if len(atoms) > 0:
                     res = Residue(atoms)
@@ -345,14 +355,16 @@ def read_pdb_file(lines):
     residues.append(res)
     chains.append(residues)
     authors = ','.join(sum(authors, []))
-    pdb_info = (header_pdb, organism, molecule, authors, ss_bonds)
-    return pdb_info, chains
+    protein_info = (header_pdb, organism, molecule, authors, ss_bonds)
+    return protein_info, chains
 
-def check_pdb_file(filename):
+def check_file_extension(filename):
 
-    """Checks if the .pdb file exists"""
+    """Checks if the file has a.pdb or .cif extension"""
 
-    assert filename.lower().endswith(".pdb"), "{} is not a .pdb file".format(filename)
+    assert (filename.lower().endswith(".pdb") or filename.lower().endswith(".cif")), (
+        "{} is not a .pdb or .cif (PDBx) file".format(filename)
+    )
 
 def check_residues_order(residues):
 
@@ -376,11 +388,14 @@ def main():
 
     # Read the file
     try:
-        check_pdb_file(args.i)
-        with open(args.i, "r") as file_pdb:
+        check_file_extension(args.i)
+        with open(args.i, "r") as input_file:
             print("Reading file")
-            lines = file_pdb.readlines()
-            pdb_info, chains = read_pdb_file(lines)
+            lines = input_file.readlines()
+            if args.i.lower().endswith(".pdb"):
+                protein_info, chains = read_protein_file(lines, pdb=True)
+            else:
+                protein_info, chains = read_protein_file(lines, pdb=False)
             for chain in chains:
                 check_residues_order(chain)
             print("ok")
@@ -388,7 +403,7 @@ def main():
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
-    
+
     # Add hydrogen atoms if specified
     if args.hydrogen:
         for chain in chains:
@@ -428,7 +443,7 @@ def main():
         h_bonds = [x + y for x, y in zip(h_bonds, cur_h_bonds)]
         print("ok")
     print("Write .dssp file")
-    write_dssp_file(args.o, pdb_info, chains, structures, h_bonds)
+    write_dssp_file(args.o, protein_info, chains, structures, h_bonds)
     print("ok")
 
 if __name__ == '__main__':
