@@ -381,6 +381,7 @@ def main():
     # Get the arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("ssam", help="The secondary structure assignment method to use", type=str)
+    parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
     parser.add_argument("-i", help="The file to assign a secondary structure to", type=str)
     parser.add_argument("-o", type=str)
     parser.add_argument("-hy", "--hydrogen", action="store_true", help="add hydrogen atoms")
@@ -390,7 +391,8 @@ def main():
     try:
         check_file_extension(args.i)
         with open(args.i, "r") as input_file:
-            print("Reading file")
+            if args.verbose:
+                print("Reading file")
             lines = input_file.readlines()
             if args.i.lower().endswith(".pdb"):
                 protein_info, chains = read_protein_file(lines, pdb=True)
@@ -398,7 +400,8 @@ def main():
                 protein_info, chains = read_protein_file(lines, pdb=False)
             for chain in chains:
                 check_residues_order(chain)
-            print("ok")
+            if args.verbose:
+                print("Done")
     except AssertionError as error:
         sys.exit(error)
     except FileNotFoundError:
@@ -406,6 +409,8 @@ def main():
 
     # Add hydrogen atoms if specified
     if args.hydrogen:
+        if args.verbose:
+                print("Adding H")
         for chain in chains:
             indices = [res.number for res in chain]
             nb_res = len(chain)
@@ -423,13 +428,17 @@ def main():
     structures = [[[], [], []], [], [], []]
     h_bonds = [0]*14
     for chain in chains:
-        print("Computing angles")
+        if args.verbose:
+            print("Chain {:s}".format(chain[0].chain))
+            print("Computing angles")
         find_angles(chain)
-        print("ok")
-        print("Assign hydrogen bonds")
+        if args.verbose:
+            print("Done")
+            print("Assign hydrogen bonds")
         hbonds.assign_hbonds(chain)
-        print("ok")
-        print("Assign secondary structures")
+        if args.verbose:
+            print("Done")
+            print("Assign secondary structures")
         cur_sec_struct, cur_h_bonds = secondary_struct(chain)
         # Helices
         structures[0] = [x + y for x, y in zip(structures[0], cur_sec_struct[0])]
@@ -441,10 +450,13 @@ def main():
         structures[3].extend(cur_sec_struct[3])
         # Hydrogen bonds
         h_bonds = [x + y for x, y in zip(h_bonds, cur_h_bonds)]
-        print("ok")
-    print("Write .dssp file")
+        if args.verbose:
+            print("Done")
+    if args.verbose:
+        print("Write .dssp file")
     write_dssp_file(args.o, protein_info, chains, structures, h_bonds)
-    print("ok")
+    if args.verbose:
+        print("Done")
 
 if __name__ == '__main__':
     main()
