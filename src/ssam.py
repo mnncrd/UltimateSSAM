@@ -350,13 +350,13 @@ def read_pdb_file(lines):
 
 def check_pdb_file(filename):
 
-    """Check if the .pdb file exists"""
+    """Checks if the .pdb file exists"""
 
     assert filename.lower().endswith(".pdb"), "{} is not a .pdb file".format(filename)
 
 def check_residues_order(residues):
 
-    """Check if the residues are stored in sequential order"""
+    """Checks if the residues are stored in sequential order"""
 
     res_nb = [residue.number for residue in residues]
     ord_res_nb = sorted(res_nb)
