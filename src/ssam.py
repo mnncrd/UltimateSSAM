@@ -366,6 +366,8 @@ def main():
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
+
+    # DSSP
     # structures = [Helices, Anti-parallel ladders, Parallel ladders, Sheets]
     structures = [[[], [], []], [], [], []]
     h_bonds = [0]*14
