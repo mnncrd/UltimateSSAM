@@ -241,6 +241,24 @@ class Atom():
         coords = [vect_x, vect_y, vect_z]
         return coords
 
+def add_hydrogen(chains, verbose):
+
+    """Adds hydrogen atoms"""
+
+    if verbose:
+        print("Adding H")
+    for chain in chains:
+        indices = [res.number for res in chain]
+        nb_res = len(chain)
+        for i in range(nb_res):
+            if chain[i].name != "P":
+                if chain[i].number-1 in indices:
+                    chain[i].add_h(chain[i-1])
+                else:
+                    chain[i].atoms["H"] = None
+            else:
+                chain[i].atoms["H"] = None
+
 def read_protein_file(lines, pdb):
 
     """Stores info"""
@@ -350,19 +368,7 @@ def main():
 
     # Add hydrogen atoms if specified
     if args.hydrogen:
-        if args.verbose:
-            print("Adding H")
-        for chain in chains:
-            indices = [res.number for res in chain]
-            nb_res = len(chain)
-            for i in range(nb_res):
-                if chain[i].name != "P":
-                    if chain[i].number-1 in indices:
-                        chain[i].add_h(chain[i-1])
-                    else:
-                        chain[i].atoms["H"] = None
-                else:
-                    chain[i].atoms["H"] = None
+        add_hydrogen(chains, args.verbose)
 
     # SSAM
     try:
