@@ -3,6 +3,9 @@
 This module does DSSP.
 """
 
+import os
+import sys
+
 import dsspout
 import sstruct
 import ssbridges
@@ -114,3 +117,39 @@ def dssp(outfile, protein_info, chains, verbose):
     write_dssp_file(outfile, protein_info, chains, structures, h_bonds)
     if verbose:
         print("Done")
+
+def check_nb_res(struct_ssam, struct_comp):
+
+    """Checks if there is the same number of residues in both files"""
+
+    assert len(struct_ssam) == len(struct_comp), "Not the same number of residues in both files"
+
+def dssp_compare(infile, outfile, chains, verbose):
+
+    """Launches a comparison to DSSP"""
+
+    dssp_file = "{:s}_dssp.dssp".format(outfile[:-5])
+    cmd = "mkdssp -i {:s} -o {:s}".format(infile, dssp_file)
+    if verbose:
+        print("Launch a comparison to DSSP")
+    os.system(cmd)
+    struct_ssam = [res.struct["STRC"] for chain in chains for res in chain]
+    struct_comp = []
+    with open(dssp_file, "r") as input_file:
+        while not '#' in next(input_file):
+            pass
+        for line in input_file:
+            if '!' not in line:
+                struct_comp.append(line[16])
+    try:
+        check_nb_res(struct_ssam, struct_comp)
+        nb_match = 0
+        nb_res = len(struct_ssam)
+        for x, y in zip(struct_ssam, struct_comp):
+            if x == y:
+                nb_match += 1
+        print(nb_match/nb_res)
+        if verbose:
+            print("Done")
+    except AssertionError as error:
+        sys.exit(error)

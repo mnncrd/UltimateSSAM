@@ -10,6 +10,7 @@ This program assigns secondary structures to a sequence.
 import argparse
 import math
 import sys
+
 # Import modules
 import angles
 import vectors
@@ -49,7 +50,7 @@ class Residue():
             "PSI":360.0
         }
         self.struct = {
-            "STRC":"",
+            "STRC":" ",
             "H":False, "B":False, "E":False, "G":False, "I":False, "T":False, "S":False,
             "3":" ", "4":" ", "5":" ",
             "BEND":"",
@@ -326,7 +327,7 @@ def check_method(ssam_method):
 
     """Checks if the secondary structure assignment method is available"""
 
-    ssam_methods = ["dssp", "ssam"]
+    ssam_methods = ["dssp", "ssam", "dsspcompare", "ssamcompare"]
     assert ssam_method in ssam_methods, (
         "{} is not a secondary structure assignment method available in "
         "UltimateSSAM".format(ssam_method)
@@ -337,9 +338,12 @@ def main():
     """Main function"""
 
     # Get the arguments
+    method_help = (
+        "the secondary structure assignment method to use: "
+        "ssam, dssp, ssamcompare, or dsspcompare"
+    )
     parser = argparse.ArgumentParser()
-    parser.add_argument("ssam", type=str,
-                        help="the secondary structure assignment method to use: ssam or dssp")
+    parser.add_argument("ssam", type=str, help=method_help)
     parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
     parser.add_argument("-i", type=str, help="the input file, either a .pdb or .cif")
     parser.add_argument("-o", type=str, help="the output file, a .dssp file")
@@ -376,9 +380,20 @@ def main():
         if args.ssam == "dssp":
             # DSSP
             dssp.dssp(args.o, protein_info, chains, args.verbose)
+        elif args.ssam == "dsspcompare":
+            # DSSP
+            dssp.dssp(args.o, protein_info, chains, args.verbose)
+            # DSSP compare
+            dssp.dssp_compare(args.i, args.o, chains, args.verbose)
         elif args.ssam == "ssam":
             # DSSP
             dssp.dssp(args.o, protein_info, chains, args.verbose)
+        elif args.ssam == "ssamcompare":
+            # DSSP
+            dssp.dssp(args.o, protein_info, chains, args.verbose)
+            # DSSP compare
+            dssp.dssp_compare(args.i, args.o, chains, args.verbose)
+
     except AssertionError as error:
         sys.exit(error)
 
