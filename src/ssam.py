@@ -323,8 +323,8 @@ def main():
     parser.add_argument("ssam", type=str,
                         help="the secondary structure assignment method to use: ssam or dssp")
     parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
-    parser.add_argument("-i", type=str, help="The file to assign a secondary structure to")
-    parser.add_argument("-o", type=str)
+    parser.add_argument("-i", type=str, help="the input file, either a .pdb or .cif")
+    parser.add_argument("-o", type=str, help="the output file, a .dssp file")
     parser.add_argument("-hy", "--hydrogen", action="store_true", help="add hydrogen atoms")
     args = parser.parse_args()
 
