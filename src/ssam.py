@@ -304,15 +304,26 @@ def check_residues_order(residues):
     ord_res_nb = sorted(res_nb)
     assert res_nb == ord_res_nb, "The residues are not in sequential order"
 
+def check_method(ssam_method):
+
+    """Checks if the secondary structure assignment method is available"""
+
+    ssam_methods = ["dssp", "ssam"]
+    assert ssam_method in ssam_methods, (
+        "{} is not a secondary structure assignment method available in "
+        "UltimateSSAM".format(ssam_method)
+    )
+
 def main():
 
     """Main function"""
 
     # Get the arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("ssam", help="The secondary structure assignment method to use", type=str)
+    parser.add_argument("ssam", type=str,
+                        help="the secondary structure assignment method to use: ssam or dssp")
     parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
-    parser.add_argument("-i", help="The file to assign a secondary structure to", type=str)
+    parser.add_argument("-i", type=str, help="The file to assign a secondary structure to")
     parser.add_argument("-o", type=str)
     parser.add_argument("-hy", "--hydrogen", action="store_true", help="add hydrogen atoms")
     args = parser.parse_args()
@@ -353,8 +364,17 @@ def main():
                 else:
                     chain[i].atoms["H"] = None
 
-    # DSSP
-    dssp.dssp(args.o, protein_info, chains, args.verbose)
+    # SSAM
+    try:
+        check_method(args.ssam)
+        if args.ssam == "dssp":
+            # DSSP
+            dssp.dssp(args.o, protein_info, chains, args.verbose)
+        elif args.ssam == "ssam":
+            # DSSP
+            dssp.dssp(args.o, protein_info, chains, args.verbose)
+    except AssertionError as error:
+        sys.exit(error)
 
 if __name__ == '__main__':
     main()
