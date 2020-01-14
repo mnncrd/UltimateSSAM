@@ -259,6 +259,8 @@ def add_hydrogen(chains, verbose):
                     chain[i].atoms["H"] = None
             else:
                 chain[i].atoms["H"] = None
+    if verbose:
+        print("Done")
 
 def read_protein_file(lines, pdb):
 
@@ -333,6 +335,13 @@ def check_method(ssam_method):
         "UltimateSSAM".format(ssam_method)
     )
 
+def check_hydrogen(chains):
+
+    """Checks if hydrogens are present"""
+
+    nb_H = len([res.atoms["H"] for chain in chains for res in chain if res.atoms["H"] is not None])
+    assert nb_H > 0, "No hydrogen atoms present, UltimateSSAM will add them"
+
 def main():
 
     """Main function"""
@@ -373,6 +382,12 @@ def main():
     # Add hydrogen atoms if specified
     if args.hydrogen:
         add_hydrogen(chains, args.verbose)
+    else:
+        try:
+            check_hydrogen(chains)
+        except AssertionError as error:
+            print(error)
+            add_hydrogen(chains, args.verbose)
 
     # SSAM
     try:
