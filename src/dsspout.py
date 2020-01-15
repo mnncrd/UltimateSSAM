@@ -18,9 +18,9 @@ def out_protein_info(outfile, protein_info):
     article_ref = ("REFERENCE W. KABSCH AND C.SANDER, BIOPOLYMERS 22 (1983) 2577-2637")
     outfile.write("{:<s}{:<25s}.\n".format(header_dssp, today.strftime("%Y-%m-%d")))
     outfile.write("{:<127s}.\n".format(article_ref))
-    outfile.write("{:<127s}.\n".format(protein_info["header_pdb"]))
-    outfile.write("{:<127s}.\n".format(protein_info["molecule"]))
-    outfile.write("{:<127s}.\n".format(protein_info["organism"]))
+    outfile.write("HEADER    {:<117s}.\n".format(protein_info["header_pdb"]))
+    outfile.write("COMPND   {:<118s}.\n".format(protein_info["molecule"]))
+    outfile.write("SOURCE   {:<118s}.\n".format(protein_info["organism"]))
     outfile.write("AUTHOR    {:<117s}.\n".format(protein_info["authors"]))
 
 def out_stats(outfile, nb_res, nb_chains, nb_ss):

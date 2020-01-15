@@ -263,9 +263,9 @@ def add_hydrogen(chains, verbose):
     if verbose:
         print("Done")
 
-def read_protein_file(lines, pdb):
+def store_metadata(lines, pdb):
 
-    """Stores info"""
+    """Store metadata info"""
 
     protein_info = {
         "header_pdb":"",
@@ -274,42 +274,65 @@ def read_protein_file(lines, pdb):
         "authors":[],
         "ss_bonds":[]
     }
-    protein_info["header_pdb"] = lines[0].strip()
+    if pdb:
+        for line in lines:
+            if line[0:6] == 'HEADER':
+                protein_info["header_pdb"] = line[10:].strip()
+            elif '2 ORGANISM_SCIENTIFIC: ' in line:
+                protein_info["organism"] += line[9:].strip()
+            elif '2 MOLECULE: ' in line:
+                protein_info["molecule"] += line[9:].strip()
+            elif line[0:6] == 'AUTHOR':
+                protein_info["authors"].append(line[10:].strip().split(","))
+            elif line[0:6] == 'SSBOND':
+                ssbond = [[line[15], float(line[16:21])], [line[29], float(line[30:35])]]
+                protein_info["ss_bonds"].append(ssbond)
+    protein_info["authors"] = ','.join(sum(protein_info["authors"], []))
+    return protein_info
+
+def store_atoms(lines, pdb):
+
+    """Store atoms info"""
+
     residues = []
     chains = []
     res_nb = 0
     current_chain = ""
     atoms = []
     for line in lines:
-        if '2 ORGANISM_SCIENTIFIC: ' in line:
-            protein_info["organism"] += line.strip()
-        elif '2 MOLECULE: ' in line:
-            protein_info["molecule"] += line.strip()
-        elif line[0:6] == 'AUTHOR':
-            protein_info["authors"].append(line[10:].strip().split(","))
-        elif line[0:6] == 'SSBOND':
-            ssbond = [[line[15], float(line[16:21])], [line[29], float(line[30:35])]]
-            protein_info["ss_bonds"].append(ssbond)
-        elif line[0:4] == 'ATOM':
-            atom = Atom(line, pdb)
-            if atom.aa_nb != res_nb:
-                if len(atoms) > 0:
-                    res = Residue(atoms)
-                    if res.chain != current_chain:
-                        if len(residues) > 0:
-                            chains.append(residues)
-                            residues = []
-                        current_chain = res.chain
-                    residues.append(res)
-                    atoms = []
-                res_nb = atom.aa_nb
-            atoms.append(atom)
+        atom = Atom(line, pdb)
+        if atom.aa_nb != res_nb:
+            if len(atoms) > 0:
+                res = Residue(atoms)
+                if res.chain != current_chain:
+                    if len(residues) > 0:
+                        chains.append(residues)
+                        residues = []
+                    current_chain = res.chain
+                residues.append(res)
+                atoms = []
+            res_nb = atom.aa_nb
+        atoms.append(atom)
+    res = Residue(atoms)
+    residues.append(res)
+    chains.append(residues)
+    return chains
+
+def read_protein_file(lines, pdb):
+
+    """Read lines"""
+
+    metadata = []
+    atoms = []
+    for line in lines:
+        if not line.startswith('ATOM') and not line.startswith('HETATM'):
+            metadata.append(line)
+        elif line.startswith('ATOM'):
+            atoms.append(line)
     try:
         checks.check_empty_protein(atoms)
-        res = Residue(atoms)
-        residues.append(res)
-        chains.append(residues)
-        protein_info["authors"] = ','.join(sum(protein_info["authors"], []))
+        protein_info = store_metadata(metadata, pdb)
+        chains = store_atoms(atoms, pdb)
         return protein_info, chains
     except AssertionError as error:
         sys.exit(error)
