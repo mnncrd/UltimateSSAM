@@ -39,9 +39,9 @@ class Residue():
             "O":next((a for a in atoms if a.atom_name == "O"), None),
             "N":next((a for a in atoms if a.atom_name == "N"), None)
         }
-        self.number = self.atoms["CA"].aa_nb
-        self.name = self.atoms["CA"].aa_name
-        self.chain = self.atoms["CA"].aa_chain
+        self.number = atoms[0].aa_nb
+        self.name = atoms[0].aa_name
+        self.chain = atoms[0].aa_chain
         self.angles = {
             "TCO":0.000,
             "KAPPA":360.0,
@@ -303,11 +303,16 @@ def read_protein_file(lines, pdb):
                     atoms = []
                 res_nb = atom.aa_nb
             atoms.append(atom)
-    res = Residue(atoms)
-    residues.append(res)
-    chains.append(residues)
-    protein_info["authors"] = ','.join(sum(protein_info["authors"], []))
-    return protein_info, chains
+    try:
+        check_empty_protein(atoms)
+        res = Residue(atoms)
+        residues.append(res)
+        chains.append(residues)
+        protein_info["authors"] = ','.join(sum(protein_info["authors"], []))
+        return protein_info, chains
+    except AssertionError as error:
+        sys.exit(error)
+
 
 def check_file_extension(filename):
 
@@ -334,6 +339,37 @@ def check_method(ssam_method):
         "{} is not a secondary structure assignment method available in "
         "UltimateSSAM".format(ssam_method)
     )
+
+def check_residues_completeness(res):
+
+    """Checks if residue is complete"""
+
+    code = {
+        "A":"ALA", "C":"CYS", "D":"ASP", "E":"GLU", "F":"PHE", "G":"GLY",
+        "H":"HIS", "I":"ILE", "K":"LYS", "L":"LEU", "M":"MET", "N":"ASN",
+        "P":"PRO", "Q":"GLN", "R":"ARG", "S":"SER", "T":"THR", "V":"VAL",
+        "W":"TRP", "Y":"TYR"
+    }
+    missing_CA = res.atoms["CA"] is None
+    missing_C = res.atoms["C"] is None
+    missing_O = res.atoms["O"] is None
+    missing_N = res.atoms["N"] is None
+    complete_res = not(missing_CA or missing_C or missing_O or missing_N)
+    assert complete_res, (
+        "Ignoring incomplete residue {:s} ({:d})".format(code[res.name], res.number)
+    )
+
+def check_valid_residues(chains):
+
+    """Checks has valid residues"""
+
+    assert len(chains) > 0, "The protein has no valid complete residues"
+
+def check_empty_protein(atoms):
+
+    """Checks if the protein is empty"""
+
+    assert len(atoms) > 0, "The protein is empty"
 
 def check_hydrogen(chains):
 
@@ -378,6 +414,25 @@ def main():
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
+
+    # Remove incomplete residues
+    for chain in chains:
+        res_to_remove = []
+        for res in chain:
+            try:
+                check_residues_completeness(res)
+            except AssertionError as error:
+                print(error)
+                res_to_remove.append(res)
+        for res in res_to_remove:
+            chain.remove(res)
+    chains = [chain for chain in chains if len(chain) > 0]
+    
+    # Exit if the protein has valid residues
+    try:
+        check_valid_residues(chains)
+    except AssertionError as error:
+        sys.exit(error)
 
     # Add hydrogen atoms if specified
     if args.hydrogen:
