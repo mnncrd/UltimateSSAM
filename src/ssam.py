@@ -180,7 +180,7 @@ class Atom():
         "ALA":"A", "CYS":"C", "ASP":"D", "GLU":"E", "PHE":"F", "GLY":"G",
         "HIS":"H", "ILE":"I", "LYS":"K", "LEU":"L", "MET":"M", "ASN":"N",
         "PRO":"P", "GLN":"Q", "ARG":"R", "SER":"S", "THR":"T", "VAL":"V",
-        "TRP":"W", "TYR":"Y"
+        "TRP":"W", "TYR":"Y", "UNK":"K"
     }
 
     def __init__(self, line, pdb=True, hydrogen=False):
@@ -197,7 +197,10 @@ class Atom():
         else:
             if pdb:
                 self.atom_name = line[12:16].strip()
-                self.aa_name = self.code[line[17:20]]
+                if line[17:20] in self.code:
+                    self.aa_name = self.code[line[17:20]]
+                else:
+                    self.aa_name = self.code["UNK"]
                 self.aa_chain = line[21:22]
                 self.aa_nb = int(line[22:26])
                 self.x_coord = float(line[30:38])
@@ -206,7 +209,10 @@ class Atom():
             else:
                 line = line.split()
                 self.atom_name = line[3]
-                self.aa_name = self.code[line[5]]
+                if line[5] in self.code:
+                    self.aa_name = self.code[line[5]]
+                else:
+                    self.aa_name = self.code["UNK"]
                 self.aa_chain = line[6]
                 self.aa_nb = int(line[8])
                 self.x_coord = float(line[10])
