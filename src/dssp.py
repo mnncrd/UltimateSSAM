@@ -10,6 +10,7 @@ import dsspout
 import sstruct
 import ssbridges
 import hbonds
+import checks
 
 def find_angles(residues):
 
@@ -118,12 +119,6 @@ def dssp(outfile, protein_info, chains, verbose):
     if verbose:
         print("Done")
 
-def check_nb_res(struct_ssam, struct_comp):
-
-    """Checks if there is the same number of residues in both files"""
-
-    assert len(struct_ssam) == len(struct_comp), "Not the same number of residues in both files"
-
 def dssp_compare(infile, outfile, chains, verbose):
 
     """Launches a comparison to DSSP"""
@@ -142,7 +137,7 @@ def dssp_compare(infile, outfile, chains, verbose):
             if '!' not in line:
                 struct_comp.append(line[16])
     try:
-        check_nb_res(struct_ssam, struct_comp)
+        checks.check_nb_res(struct_ssam, struct_comp)
         nb_match = 0
         nb_res = len(struct_ssam)
         for x, y in zip(struct_ssam, struct_comp):
