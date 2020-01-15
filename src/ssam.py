@@ -348,15 +348,18 @@ def main():
     """Main function"""
 
     # Get the arguments
+    description_help = "UltimateSSAM assigns secondary structures to a protein"
     method_help = (
-        "the secondary structure assignment method to use: "
-        "ssam, dssp, ssamcompare, or dsspcompare"
+        "the secondary structure assignment method to use: ssam, dssp, "
+        "ssamcompare, or dsspcompare. If ssamcompare or dsspcompare, -oc "
+        "is required"
     )
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=description_help)
     parser.add_argument("ssam", type=str, help=method_help)
     parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
     parser.add_argument("-i", type=str, help="the input file, either a .pdb or .cif")
     parser.add_argument("-o", type=str, help="the output file, a .dssp file")
+    parser.add_argument("-oc", type=str, help="the output file for comparison, a .csv file")
     parser.add_argument("-hy", "--hydrogen", action="store_true", help="add hydrogen atoms")
     args = parser.parse_args()
 
@@ -427,7 +430,7 @@ def main():
             # DSSP
             dssp.dssp(args.o, protein_info, chains, args.verbose)
             # DSSP compare
-            dssp.dssp_compare(args.i, args.o, chains, args.verbose)
+            dssp.dssp_compare(args.i, args.o, args.oc, chains, args.verbose)
 
     except AssertionError as error:
         sys.exit(error)
