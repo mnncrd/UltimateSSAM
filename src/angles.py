@@ -1,14 +1,28 @@
 """Calculation of angles module.
 
-This module computes angles between vectors.
+This module computes angles between vectors. It computes the angle between two
+vectors and the dihedral angle between four atoms.
 """
-
+# Import libraries
 import math
+
+# Import modules
 import vectors
 
 def compute_angle(v_i, v_j):
 
-    """Computes the angle between two vectors"""
+    """Computes the angle between two vectors.
+
+    Divides the scalar product of two vectors by the product of their norms to
+    find the angle between two vectors.
+
+    Args:
+        v_i: A vector of size 3.
+        v_j: A vector of size 3.
+
+    Returns:
+        A float equalling the angle in radians.
+    """
 
     scal_prod = vectors.scal_product(v_i, v_j)
     v_i_norm = vectors.vector_norm(v_i)
@@ -18,7 +32,21 @@ def compute_angle(v_i, v_j):
 
 def compute_dihedral_angle(v_i, v_j, v_k, v_l):
 
-    """Computes the dihedral angle between four vectors"""
+    """Computes the dihedral angle between four atoms.
+
+    Computes the angle formed by two intersecting planes. The given vectors
+    represent the position of four atoms. Atoms i, j, and k form the first
+    plane. Atoms j, k, and l form the second plane.
+
+    Args:
+        v_i: A vector of size 3.
+        v_j: A vector of size 3.
+        v_k: A vector of size 3.
+        v_l: A vector of size 3.
+
+    Returns:
+        A float equalling the dihedral angle in degrees.
+    """
 
     v_ji = vectors.compute_diff_vect(v_i=v_j, v_j=v_i)
     v_kj = vectors.compute_diff_vect(v_i=v_k, v_j=v_j)

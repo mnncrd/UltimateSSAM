@@ -1,13 +1,24 @@
 """Hydrogen bonds module.
 
-This module finds hydrogen bonds in the protein.
+This module finds hydrogen bonds in the protein. For instance, it assigns the
+two best hydrogen bonds for both O-->H-N and N-H-->O types bonds, and counts the
+number of hydrogen bonds.
 """
 
 def assign_hbonds(residues):
 
-    """Assigns h_bonds to residues"""
+    """Assigns h_bonds to residues.
+
+    For each Residue instance in the given residues list, assigns the two best
+    hydrogen bonds it is involved in for both O-->H-N and N-H-->O bonds.
+
+    Args:
+        residues: A list of Residue instances.
+    """
 
     nb_res = len(residues)
+
+    # O-->H-N
     for i in range(nb_res):
         all_hb = {}
         for j in range(nb_res):
@@ -22,6 +33,8 @@ def assign_hbonds(residues):
         min_hb = min(all_hb, key=all_hb.get)
         residues[i].bonds["O2"] = min_hb
         residues[i].bonds["VO2"] = all_hb[min_hb]
+
+    # N-H-->O
     for i in range(1, nb_res):
         all_hb = {}
         for j in range(nb_res):
@@ -37,10 +50,20 @@ def assign_hbonds(residues):
         residues[i].bonds["N2"] = min_hb
         residues[i].bonds["VN2"] = all_hb[min_hb]
 
-
 def nb_hbonds(para_hbonds, anti_hbonds, residues):
 
-    """Finds the number of hydrogen bonda"""
+    """Finds the number of hydrogen bonds.
+
+    Counts the number of hydrogen bond values below the 0.5 threshold.
+
+    Args:
+        para_hbonds: A list of bonds.
+        anti_hbonds: A list of bonds.
+        residues: A list of Residue instances.
+
+    Returns:
+        A list contianing the number of hydrogen-bonds.
+    """
 
     nb_para_hbonds = len(para_hbonds)
     nb_anti_hbonds = len(anti_hbonds)
