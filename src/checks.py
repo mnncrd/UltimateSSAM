@@ -43,13 +43,13 @@ def check_residues_completeness(res):
         "A":"ALA", "C":"CYS", "D":"ASP", "E":"GLU", "F":"PHE", "G":"GLY",
         "H":"HIS", "I":"ILE", "K":"LYS", "L":"LEU", "M":"MET", "N":"ASN",
         "P":"PRO", "Q":"GLN", "R":"ARG", "S":"SER", "T":"THR", "V":"VAL",
-        "W":"TRP", "Y":"TYR", "K":"UNK"
+        "W":"TRP", "Y":"TYR", "X":"UNK"
     }
-    missing_CA = res.atoms["CA"] is None
-    missing_C = res.atoms["C"] is None
-    missing_O = res.atoms["O"] is None
-    missing_N = res.atoms["N"] is None
-    complete_res = not(missing_CA or missing_C or missing_O or missing_N)
+    missing_ca = res.atoms["CA"] is None
+    missing_c = res.atoms["C"] is None
+    missing_o = res.atoms["O"] is None
+    missing_n = res.atoms["N"] is None
+    complete_res = not(missing_ca or missing_c or missing_o or missing_n)
     assert complete_res, (
         "Ignoring incomplete residue {:s} ({:d})".format(code[res.name], res.number)
     )
@@ -70,5 +70,5 @@ def check_hydrogen(chains):
 
     """Checks if hydrogens are present"""
 
-    nb_H = len([res.atoms["H"] for chain in chains for res in chain if res.atoms["H"] is not None])
-    assert nb_H > 0, "No hydrogen atoms present, UltimateSSAM will add them"
+    nb_h = len([res.atoms["H"] for chain in chains for res in chain if res.atoms["H"] is not None])
+    assert nb_h > 0, "No hydrogen atoms present, UltimateSSAM will add them"

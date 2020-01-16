@@ -180,7 +180,7 @@ class Atom():
         "ALA":"A", "CYS":"C", "ASP":"D", "GLU":"E", "PHE":"F", "GLY":"G",
         "HIS":"H", "ILE":"I", "LYS":"K", "LEU":"L", "MET":"M", "ASN":"N",
         "PRO":"P", "GLN":"Q", "ARG":"R", "SER":"S", "THR":"T", "VAL":"V",
-        "TRP":"W", "TYR":"Y", "UNK":"K"
+        "TRP":"W", "TYR":"Y", "UNK":"X"
     }
 
     def __init__(self, line, pdb=True, hydrogen=False):
@@ -249,7 +249,7 @@ class Atom():
         coords = [vect_x, vect_y, vect_z]
         return coords
 
-def add_hydrogen(chains, verbose):
+def add_hydrogen_atoms(chains, verbose):
 
     """Adds hydrogen atoms"""
 
@@ -268,6 +268,19 @@ def add_hydrogen(chains, verbose):
                 chain[i].atoms["H"] = None
     if verbose:
         print("Done")
+
+def add_hydrogen(hydrogen, chains, verbose):
+
+    """Add hydrogen atoms if specified"""
+
+    if hydrogen:
+        add_hydrogen_atoms(chains, verbose)
+    else:
+        try:
+            checks.check_hydrogen(chains)
+        except AssertionError as error:
+            print(error)
+            add_hydrogen_atoms(chains, verbose)
 
 def store_metadata(lines, pdb):
 
@@ -324,12 +337,14 @@ def store_atoms(lines, pdb):
     chains.append(residues)
     return chains
 
-def read_protein_file(lines, pdb):
+def read_protein_file(lines, pdb, verbose):
 
     """Read lines"""
 
     metadata = []
     atoms = []
+    if verbose:
+        print("Reading file")
     for line in lines:
         if not line.startswith('ATOM') and not line.startswith('HETATM'):
             metadata.append(line)
@@ -339,9 +354,28 @@ def read_protein_file(lines, pdb):
         checks.check_empty_protein(atoms)
         protein_info = store_metadata(metadata, pdb)
         chains = store_atoms(atoms, pdb)
+        if verbose:
+            print("Done")
         return protein_info, chains
     except AssertionError as error:
         sys.exit(error)
+
+def remove_incomplete_res(chains):
+
+    """Removes incomplete residues"""
+
+    for chain in chains:
+        res_to_remove = []
+        for res in chain:
+            try:
+                checks.check_residues_completeness(res)
+            except AssertionError as error:
+                print(error)
+                res_to_remove.append(res)
+        for res in res_to_remove:
+            chain.remove(res)
+    chains = [chain for chain in chains if len(chain) > 0]
+    return chains
 
 def main():
 
@@ -367,35 +401,21 @@ def main():
     try:
         checks.check_file_extension(args.i)
         with open(args.i, "r") as input_file:
-            if args.verbose:
-                print("Reading file")
             lines = input_file.readlines()
             if args.i.lower().endswith(".pdb"):
-                protein_info, chains = read_protein_file(lines, pdb=True)
+                protein_info, chains = read_protein_file(lines, True, args.verbose)
             else:
-                protein_info, chains = read_protein_file(lines, pdb=False)
+                protein_info, chains = read_protein_file(lines, False, args.verbose)
             for chain in chains:
                 checks.check_residues_order(chain)
-            if args.verbose:
-                print("Done")
     except AssertionError as error:
         sys.exit(error)
     except FileNotFoundError:
         sys.exit("{} does not exist".format(args.i))
 
     # Remove incomplete residues
-    for chain in chains:
-        res_to_remove = []
-        for res in chain:
-            try:
-                checks.check_residues_completeness(res)
-            except AssertionError as error:
-                print(error)
-                res_to_remove.append(res)
-        for res in res_to_remove:
-            chain.remove(res)
-    chains = [chain for chain in chains if len(chain) > 0]
-    
+    chains = remove_incomplete_res(chains)
+
     # Exit if the protein has valid residues
     try:
         checks.check_valid_residues(chains)
@@ -403,14 +423,7 @@ def main():
         sys.exit(error)
 
     # Add hydrogen atoms if specified
-    if args.hydrogen:
-        add_hydrogen(chains, args.verbose)
-    else:
-        try:
-            checks.check_hydrogen(chains)
-        except AssertionError as error:
-            print(error)
-            add_hydrogen(chains, args.verbose)
+    add_hydrogen(args.hydrogen, chains, args.verbose)
 
     # SSAM
     try:
@@ -422,7 +435,7 @@ def main():
             # DSSP
             dssp.dssp(args.o, protein_info, chains, args.verbose)
             # DSSP compare
-            dssp.dssp_compare(args.i, args.o, chains, args.verbose)
+            dssp.dssp_compare(args.i, args.o, args.oc, chains, args.verbose)
         elif args.ssam == "ssam":
             # DSSP
             dssp.dssp(args.o, protein_info, chains, args.verbose)
@@ -431,7 +444,6 @@ def main():
             dssp.dssp(args.o, protein_info, chains, args.verbose)
             # DSSP compare
             dssp.dssp_compare(args.i, args.o, args.oc, chains, args.verbose)
-
     except AssertionError as error:
         sys.exit(error)
 
