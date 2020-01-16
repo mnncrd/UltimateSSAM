@@ -13,7 +13,7 @@ def out_protein_info(outfile, protein_info):
     today = date.today()
     header_dssp = (
         "==== Secondary Structure Definition by the program DSSP, "
-        "version by M. Curaudeau/2020-01-02 ==== DATE="
+        "version by M. Curaudeau/2020-01-16 ==== DATE="
     )
     article_ref = ("REFERENCE W. KABSCH AND C.SANDER, BIOPOLYMERS 22 (1983) 2577-2637")
     outfile.write("{:<s}{:<25s}.\n".format(header_dssp, today.strftime("%Y-%m-%d")))
