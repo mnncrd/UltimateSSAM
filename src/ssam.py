@@ -4,7 +4,9 @@ This program assigns secondary structures to a sequence.
 
     Typical usage example:
 
-    $ python ssam.py filename -o output_file
+    $ python ssam.py method -i input_file -o output_file
+    $ python ssam.py method -i input_file -o output_file -hy
+    $ python ssam.py method -i input_file -o output_file -oc output-compare
 """
 # Import libraries
 import argparse
@@ -282,7 +284,41 @@ def add_hydrogen(hydrogen, chains, verbose):
             print(error)
             add_hydrogen_atoms(chains, verbose)
 
-def store_metadata(lines, pdb):
+def store_metadata_cif(lines):
+
+    """Store metadata info"""
+
+    protein_info = {
+        "header_pdb":"",
+        "organism":" ",
+        "molecule":" ",
+        "authors":[],
+        "ss_bonds":[]
+    }
+    prot_name = "   "
+    for i, line in enumerate(lines):
+        if "_struct_keywords.pdbx_keywords" in line:
+            header = line[30:].strip().split("'")
+            protein_info["header_pdb"] = header[len(header)//2]
+        elif "_entry.id" in line:
+            prot_name += line[9:].strip()
+        elif "_entity_src_gen.pdbx_gene_src_scientific_name" in line:
+            orgnsm = line[45:].strip().split("'")
+            protein_info["organism"] += orgnsm[len(orgnsm)//2]
+        elif "_entity.pdbx_description" in line:
+            mol = line[24:].strip().split("'")
+            protein_info["molecule"] += mol[len(mol)//2]
+        elif "_audit_author.pdbx_ordinal " in line:
+            auth_line = i + 1
+            while "#" not in lines[auth_line]:
+                auth = lines[auth_line].strip().split("'")
+                protein_info["authors"].append(auth[1])
+                auth_line += 1
+    protein_info["authors"] = ','.join(protein_info["authors"])
+    protein_info["header_pdb"] += prot_name
+    return protein_info
+
+def store_metadata_pdb(lines):
 
     """Store metadata info"""
 
@@ -293,19 +329,18 @@ def store_metadata(lines, pdb):
         "authors":[],
         "ss_bonds":[]
     }
-    if pdb:
-        for line in lines:
-            if line[0:6] == 'HEADER':
-                protein_info["header_pdb"] = line[10:].strip()
-            elif '2 ORGANISM_SCIENTIFIC: ' in line:
-                protein_info["organism"] += line[9:].strip()
-            elif '2 MOLECULE: ' in line:
-                protein_info["molecule"] += line[9:].strip()
-            elif line[0:6] == 'AUTHOR':
-                protein_info["authors"].append(line[10:].strip().split(","))
-            elif line[0:6] == 'SSBOND':
-                ssbond = [[line[15], float(line[16:21])], [line[29], float(line[30:35])]]
-                protein_info["ss_bonds"].append(ssbond)
+    for line in lines:
+        if line[0:6] == 'HEADER':
+            protein_info["header_pdb"] = line[10:].strip()
+        elif '2 ORGANISM_SCIENTIFIC: ' in line:
+            protein_info["organism"] += line[9:].strip()
+        elif '2 MOLECULE: ' in line:
+            protein_info["molecule"] += line[9:].strip()
+        elif line[0:6] == 'AUTHOR':
+            protein_info["authors"].append(line[10:].strip().split(","))
+        elif line[0:6] == 'SSBOND':
+            ssbond = [[line[15], float(line[16:21])], [line[29], float(line[30:35])]]
+            protein_info["ss_bonds"].append(ssbond)
     protein_info["authors"] = ','.join(sum(protein_info["authors"], []))
     return protein_info
 
@@ -352,7 +387,10 @@ def read_protein_file(lines, pdb, verbose):
             atoms.append(line)
     try:
         checks.check_empty_protein(atoms)
-        protein_info = store_metadata(metadata, pdb)
+        if pdb:
+            protein_info = store_metadata_pdb(metadata)
+        else:
+            protein_info = store_metadata_cif(metadata)
         chains = store_atoms(atoms, pdb)
         if verbose:
             print("Done")
