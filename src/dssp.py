@@ -119,7 +119,40 @@ def dssp(outfile, protein_info, chains, verbose):
     if verbose:
         print("Done")
 
-def dssp_compare(infile, outfile, chains, verbose):
+def stats_dssp(struct_ssam, struct_comp):
+
+    """Performs stats"""
+
+    stats = {}
+    spl_strct = {"G":"H", "H":"H", "I":"H", "B":"E", "E":"E", "S":"C", "T":"C", " ":"C"}
+    nb_match = 0
+    nb_res = len(struct_ssam)
+    for s_ssam, s_comp in zip(struct_ssam, struct_comp):
+        if s_ssam == s_comp:
+            nb_match += 1
+    stats["acc"] = nb_match/nb_res
+    nb_match_3 = {"H":0, "E":0, "C":0}
+    for s_ssam, s_comp in zip(struct_ssam, struct_comp):
+        if spl_strct[s_ssam] == spl_strct[s_comp]:
+            nb_match_3[spl_strct[s_ssam]] += 1
+    nb_h = len([x for x in struct_comp if spl_strct[x] == "H"])
+    nb_e = len([x for x in struct_comp if spl_strct[x] == "E"])
+    nb_c = len([x for x in struct_comp if spl_strct[x] == "C"])
+    if nb_h > 0:
+        stats["acch"] = nb_match_3["H"]/nb_h
+    else:
+        stats["acch"] = 1.0
+    if nb_e > 0:
+        stats["acce"] = nb_match_3["E"]/nb_e
+    else:
+        stats["acce"] = 1.0
+    if nb_c > 0:
+        stats["accc"] = nb_match_3["C"]/nb_c
+    else:
+        stats["accc"] = 1.0
+    return stats
+
+def dssp_compare(infile, outfile, outcompare, chains, verbose):
 
     """Launches a comparison to DSSP"""
 
@@ -138,12 +171,13 @@ def dssp_compare(infile, outfile, chains, verbose):
                 struct_comp.append(line[16])
     try:
         checks.check_nb_res(struct_ssam, struct_comp)
-        nb_match = 0
-        nb_res = len(struct_ssam)
-        for x, y in zip(struct_ssam, struct_comp):
-            if x == y:
-                nb_match += 1
-        print(nb_match/nb_res)
+        stats = stats_dssp(struct_ssam, struct_comp)
+        with open(outcompare, "a") as output_file:
+            line = (
+                "{:s},{:4f},{:4f},{:4f},{:4f}"
+                "\n".format(infile, stats["acc"], stats["acch"], stats["acce"], stats["accc"])
+            )
+            output_file.write(line)
         if verbose:
             print("Done")
     except AssertionError as error:
