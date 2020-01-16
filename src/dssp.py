@@ -3,9 +3,11 @@
 This module does DSSP.
 """
 
+# Import libraries
 import os
 import sys
 
+# Import modules
 import dsspout
 import sstruct
 import ssbridges

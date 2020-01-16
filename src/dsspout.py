@@ -4,6 +4,7 @@ This module generates the text to write to the dssp file. For instance, it
 writes the information about each residue.
 """
 
+# Import libraries
 from datetime import date
 
 def out_protein_info(outfile, protein_info):
