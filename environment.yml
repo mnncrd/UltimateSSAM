@@ -1,0 +1,7 @@
+name: UltimateSSAM
+channels:
+  - salilab
+  - defaults
+dependencies:
+  - dssp=3.0.0
+  - python=3.7
