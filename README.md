@@ -64,7 +64,7 @@ python3 ssam.py dssp -i input -o output -hy
 To run the `dsspcompare` mode, run the following command:
 
 ```
-$ python3 ssam.py dsspcompare -i input -o output -oc output-compare
+python3 ssam.py dsspcompare -i input -o output -oc output-compare
 ```
 
 With:
